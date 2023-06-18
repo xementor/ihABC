@@ -8,6 +8,7 @@
 
 local physics = require( "physics" )
 physics.start()
+-- physics.setDrawMode( "debug" )
 
 
 local height = 570
@@ -25,10 +26,13 @@ local fontSize = 50
 
 
 local box1Group = display.newGroup()
+
+box1Text = "A"
 local box1 = display.newRect(box1Group, boxPositionX, 10, boxSize, boxSize)
+box1.myName = box1Text
 local box1Alphabet = display.newText({
     parent = box1Group,
-    text = "A",
+    text = box1Text,
     x = box1.x,
     y = box1.y+boxSize/2-fontSize/2,
     width = box1.width,
@@ -40,10 +44,12 @@ local box1Alphabet = display.newText({
 box1Alphabet:setTextColor(1, 0, 0)
 
 local box2Group = display.newGroup()
+local box2Text = "B"
 local box2 = display.newRect(box2Group, boxPositionX + boxSize + boxGap, 10, boxSize, boxSize)
+box2.myName = box2Text
 local box2Alphabet = display.newText({
     parent = box2Group,
-    text = "B",
+    text = box2Text,
     x = box2.x,
     y = box1.y+boxSize/2-fontSize/2,
     width = box2.width,
@@ -55,10 +61,12 @@ local box2Alphabet = display.newText({
 box2Alphabet:setTextColor(0, 1, 0)
 
 local box3Group = display.newGroup()
+local box3Text = "C"
 local box3 = display.newRect(box3Group, boxPositionX + boxSize + 2 * boxGap + boxSize, 10, boxSize, boxSize)
+box3.myName = box3Text
 local box3Alphabet = display.newText({
     parent = box3Group,
-    text = "C",
+    text = box3Text,
     x = box3.x,
     y = box3.y + boxSize/2 - fontSize/2,
     width = box3.width,
@@ -74,19 +82,22 @@ box3Alphabet:setTextColor(0, 0, 1)
 -- Place Ball
 local ballGroup = display.newGroup()
 local error = 5
-local radius = 50
-local ballYPosition = display.contentHeight - error - 500
+local radius = 30
+local ballYPosition = display.contentHeight - error
 
 local ball = display.newCircle(ballGroup, display.contentCenterX, ballYPosition, radius )
+ball.isBullet = true
+ball.myName = "ball"
+
 local ballAlphabet = display.newText({
     parent = ballGroup,
     text = "C",
     x = ball.x,
-    y = ball.y + boxSize/2 - fontSize/2,
+    y = ball.y,
     width = ball.width,
     height = ball.height,
     font = native.systemFont,
-    fontSize = fontSize,
+    fontSize = (radius),
     align = "center"
 })
 ballAlphabet:setTextColor(0, 0, 1)
@@ -96,6 +107,7 @@ local startX, startY
 
 local function onTouch(event)
     local phase = event.phase
+    local ballGroup = ball
 
     if phase == "began" then
         startX = event.x
@@ -111,8 +123,8 @@ local function onTouch(event)
             local deltaX = event.x - startX
             local deltaY = event.y - startY
 
-            local velocityX = deltaX * 0.9 -- Adjust the scaling factor as needed
-            local velocityY = deltaY * 0.9 -- Adjust the scaling factor as needed
+            local velocityX = deltaX * .9 -- Adjust the scaling factor as needed
+            local velocityY = deltaY * 1.9 -- Adjust the scaling factor as needed
 
             ballGroup:setLinearVelocity(velocityX, velocityY)
 
@@ -126,23 +138,70 @@ local function onTouch(event)
     return true -- To prevent propagation of the touch event to underlying objects
 end
 
-ballGroup:addEventListener("touch", onTouch)
+ball:addEventListener("touch", onTouch)
 
 --  Platform
 local platformWidth = 50
 
-local platform = display.newImageRect("platform.png", 360, platformWidth )
+local platform = display.newRect(0, 0, display.contentWidth, platformWidth )
+platform.myName = "platform"
+platform:setFillColor(0,1,0)
 platform.x = display.contentCenterX
 platform.y = display.contentHeight + radius
 
 -- Boundary
-local boundarygroup = display.newGroup()
-display.newRect(boundarygroup, 0, display.contentCenterY, 10, height  )
-display.newRect(boundarygroup, display.contentWidth, display.contentCenterY, 10, height  )
+local leftBoundary = display.newRect(
+  display.contentCenterX - (display.contentWidth/2), display.contentCenterY, 0, display.contentHeight
+)
+leftBoundary.myName = "platform"
 
+local rightBounary = display.newRect(
+  display.contentCenterX + (display.contentWidth/2), display.contentCenterY, 0, display.contentHeight
+)
+rightBounary.myName = "platform"
 
 -- Adding physic
 
+
 physics.addBody( platform, "static" )
--- physics.addBody( boundarygroup, "static" )
-physics.addBody( ballGroup, "dynamic", { radius=radius/2, bounce=0.2 } )
+physics.addBody( leftBoundary, "static" )
+physics.addBody( rightBounary, "static" )
+physics.addBody( box1, "static" )
+physics.addBody( box2, "static" )
+physics.addBody( box3, "static" )
+physics.addBody( ball, "dynamic" , { bounce=0.3})
+-- physics.addBody( ballAlphabet, "dynamic", { bounce=0.3 } )
+
+
+
+
+
+
+-- Collision
+
+local function onCollision( event )
+ 
+    if ( event.phase == "began" ) then
+ 
+        local obj1 = event.object1
+        local obj2 = event.object2
+        print( "................." )
+        print( obj1.myName)
+        print( obj2.myName)
+
+        if ( (
+                 obj1.myName == box1Text or 
+                 obj1.myName == box2Text or
+                 obj1.myName == box3Text
+             ) and
+             ( obj2.myName == "ball" )
+            )
+        then
+            -- Remove both the laser and asteroid
+            display.remove( obj1 )
+        end
+    end
+end
+
+
+Runtime:addEventListener( "collision", onCollision )
