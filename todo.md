@@ -6,6 +6,7 @@
 - [x] sidebar added
 - [x] if ball outsite of the screen remove and revive the ball again
 - [x] ball Text should be in the platform
+- [x] refractored code
 
 - [ ] onclick saying select c and first need animation of game command
 
