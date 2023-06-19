@@ -112,7 +112,7 @@ ball.myName = "ball"
 local ballAlphabet = display.newText({
     parent = ballGroup,
     text = "C",
-    x = display.contentWidth/2,
+    x = display.contentWidth / 2,
     y = display.contentHeight + platformWidth,
     width = ball.width,
     height = ball.height,
@@ -182,9 +182,6 @@ local function onCollision(event)
     if (event.phase == "began") then
         local obj1 = event.object1
         local obj2 = event.object2
-        print(".................")
-        print(obj1.myName)
-        print(obj2.myName)
 
         if ((
                     obj1.myName == box1Text or
@@ -213,11 +210,11 @@ local function gameLoop()
             ball.y > display.contentHeight + 10)
     then
         ball.x = display.contentCenterX
-        ball.y =  ballYPosition
+        ball.y = ballYPosition
         ball:setLinearVelocity(velocityX, velocityY)
         ball.alpha = 0
 
-        transition.to( ball, { alpha=1, time=4000,} )
+        transition.to(ball, { alpha = 1, time = 4000, })
     end
 end
-gameLoopTimer = timer.performWithDelay( 500, gameLoop, 0 )
+gameLoopTimer = timer.performWithDelay(500, gameLoop, 0)

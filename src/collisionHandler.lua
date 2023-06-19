@@ -8,10 +8,6 @@ function M.onCollision(event)
   local obj2 = event.object2
 
   if (event.phase == "began") then
-    print(".................")
-    print(obj1.myName)
-    print(obj2.myName)
-
     if ((
             obj1.myName == box1Text or
             obj1.myName == box2Text or

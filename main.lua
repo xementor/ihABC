@@ -20,7 +20,6 @@ local platform = barrier.createPlatform()
 local leftBoundary = barrier.createLeftBoundary()
 local rightBoundary = barrier.createRightBoundary()
 
-local onTouch = ball.createOnTouch(ball1)
 
 
 
@@ -36,7 +35,7 @@ physics.addBody(ball1, "dynamic", { bounce = 0.3 })
 
 
 -- Collision and EventListener
-ball1:addEventListener("touch", onTouch)
+ball1:addEventListener("touch", ball.createOnTouch(ball1))
 Runtime:addEventListener("collision", collisionHandler.onCollision)
 
 

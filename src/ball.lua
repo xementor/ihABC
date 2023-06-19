@@ -35,7 +35,6 @@ function M.createOnTouch(ball2)
     if phase == "began" then
       startX = event.x
       startY = event.y
-      print(startX)
       -- Handle initial touch event
       display.getCurrentStage():setFocus(ball2)
       ball2.isFocus = true
