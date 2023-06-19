@@ -21,8 +21,7 @@ function M.createBall()
     fontSize = const.ballRadius,
     align = "center"
   })
-  ballAlphabet:setTextColor(0, 0, 1)
-
+  ballAlphabet:setTextColor(1)
 
   return ball
 end

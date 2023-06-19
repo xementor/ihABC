@@ -15,8 +15,9 @@ local box1 = boxesModule.createBox(const.boxPositionX, 10, "A", { 1, 0, 0 })
 local box2 = boxesModule.createBox(const.boxPositionX + const.boxSize + const.boxGap, 10, "B", { 0, 1, 0 })
 local box3 = boxesModule.createBox(const.boxPositionX + const.boxSize + 2 * const.boxGap + const.boxSize, 10, "C",
   { 0, 0, 1 })
-local ball1 = ball.createBall()
+
 local platform = barrier.createPlatform()
+local ball1 = ball.createBall()
 local leftBoundary = barrier.createLeftBoundary()
 local rightBoundary = barrier.createRightBoundary()
 
