@@ -21,7 +21,7 @@ function M.createBox(x, y, text, color)
     })
     boxAlphabet:setTextColor(unpack(color))
 
-    return box;
+    return { box = box, boxAlphabet = boxAlphabet };
 end
 
 return M

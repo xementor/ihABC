@@ -2,28 +2,26 @@ local const = require "src.const"
 local M = {}
 
 function M.createBall()
-  local ballGroup = display.newGroup()
   local error = 5
   local ballYPosition = display.contentHeight - error
 
-  local ball = display.newCircle(ballGroup, display.contentCenterX, ballYPosition, const.ballRadius)
+  local ball = display.newCircle(display.contentCenterX, ballYPosition, const.ballRadius)
   ball.isBullet = true
   ball.myName = "ball"
+  return ball
+end
 
+function M.createBallAlphabet(text)
   local ballAlphabet = display.newText({
-    parent = ballGroup,
-    text = "C",
-    x = display.contentWidth / 2,
-    y = display.contentHeight + const.platformWidth,
-    width = ball.width,
-    height = ball.height,
+    text = text,
+    x = display.contentCenterX,
+    y = display.contentCenterY,
     font = native.systemFont,
-    fontSize = const.ballRadius,
+    fontSize = 50,
     align = "center"
   })
   ballAlphabet:setTextColor(1)
-
-  return ball
+  return ballAlphabet
 end
 
 function M.createOnTouch(ball2)

@@ -5,6 +5,7 @@ local const            = require("src.const")
 local ball             = require("src.ball")
 local barrier          = require("src.barrier")
 local collisionHandler = require("src.collisionHandler")
+local animation        = require("plugin.animation")
 
 physics.start()
 
@@ -18,26 +19,54 @@ local box3 = boxesModule.createBox(const.boxPositionX + const.boxSize + 2 * cons
 
 local platform = barrier.createPlatform()
 local ball1 = ball.createBall()
+local ballText = ball.createBallAlphabet(const.ballText)
 local leftBoundary = barrier.createLeftBoundary()
 local rightBoundary = barrier.createRightBoundary()
 
 
 
+local function animateText(ball)
+  local function vong(event)
+    transition.to(ball,
+      {
+        x = display.contentCenterX,
+        y = display.contentCenterY,
+      }
+    )
+
+    transition.scaleTo(ball, { xScale = 2.5, yScale = 2.5, time = 500 })
+    transition.scaleTo(ball, { delay = 500, xScale = 2.0, yScale = 2, time = 100 })
+    transition.scaleTo(ball, { delay = 500, xScale = .5, yScale = .5 })
+
+    transition.to(ball,
+      {
+        delay = 600,
+        time  = 500,
+        x     = display.contentWidth / 2,
+        y     = display.contentHeight + const.platformWidth / 2,
+      }
+    )
+  end
+  return vong
+end
+
+animateText(ballText)()
 
 
 physics.addBody(platform, "static")
 physics.addBody(leftBoundary, "static")
 physics.addBody(rightBoundary, "static")
-physics.addBody(box1, "static")
-physics.addBody(box2, "static")
-physics.addBody(box3, "static")
+physics.addBody(box1.box, "static")
+physics.addBody(box2.box, "static")
+physics.addBody(box3.box, "static")
 physics.addBody(ball1, "dynamic", { bounce = 0.3 })
-
 
 
 -- Collision and EventListener
 ball1:addEventListener("touch", ball.createOnTouch(ball1))
+ballText:addEventListener("touch", animateText(ballText))
 Runtime:addEventListener("collision", collisionHandler.onCollision)
+
 
 
 

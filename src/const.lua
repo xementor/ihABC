@@ -9,5 +9,6 @@ M.boxGap = 5
 M.boxPositionX = 55
 M.ballYPosition = display.contentHeight - M.error
 M.platformWidth = 50
+M.ballText = "C"
 
 return M
