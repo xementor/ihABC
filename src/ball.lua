@@ -8,6 +8,7 @@ function M.createBall()
   local ball = display.newCircle(display.contentCenterX, ballYPosition, const.ballRadius)
   ball.isBullet = true
   ball.myName = "ball"
+  ball.platformTouched = false
   return ball
 end
 
@@ -56,6 +57,15 @@ function M.createOnTouch(ball2)
   end
 
   return onTouch
+end
+
+function M.startingPhaseBall(ball)
+  ball.x = display.contentCenterX
+  ball.y = const.ballYPosition
+  ball:setLinearVelocity(0, 0)
+  ball.alpha = 0
+
+  transition.to(ball, { alpha = 1, time = 4000, })
 end
 
 return M

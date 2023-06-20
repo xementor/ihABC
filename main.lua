@@ -9,17 +9,27 @@ local animation        = require("plugin.animation")
 
 physics.start()
 
+backgroundModule.createBackground()
 
-local background = backgroundModule.createBackground()
+local box1 = boxesModule.createBox(
+  const.boxPositionX, 10, const.ballText[1], { 1, 0, 0 }
+)
+local box2 = boxesModule.createBox(
+  const.boxPositionX + const.boxSize + const.boxGap,
+  10, const.ballText[2],
+  { 0, 1, 0 }
+)
 
-local box1 = boxesModule.createBox(const.boxPositionX, 10, "A", { 1, 0, 0 })
-local box2 = boxesModule.createBox(const.boxPositionX + const.boxSize + const.boxGap, 10, "B", { 0, 1, 0 })
-local box3 = boxesModule.createBox(const.boxPositionX + const.boxSize + 2 * const.boxGap + const.boxSize, 10, "C",
-  { 0, 0, 1 })
+local box3 = boxesModule.createBox(
+  const.boxPositionX + const.boxSize + 2 * const.boxGap + const.boxSize,
+  10,
+  const.ballText[3],
+  { 0, 0, 1 }
+)
 
 local platform = barrier.createPlatform()
-local ball1 = ball.createBall()
-local ballText = ball.createBallAlphabet(const.ballText)
+Ball1 = ball.createBall()
+local ballText = ball.createBallAlphabet(const.getTargetText(const.i))
 local leftBoundary = barrier.createLeftBoundary()
 local rightBoundary = barrier.createRightBoundary()
 
@@ -59,29 +69,22 @@ physics.addBody(rightBoundary, "static")
 physics.addBody(box1.box, "static")
 physics.addBody(box2.box, "static")
 physics.addBody(box3.box, "static")
-physics.addBody(ball1, "dynamic", { bounce = 0.3 })
-
+physics.addBody(Ball1, "dynamic", { bounce = 0.3 })
 
 -- Collision and EventListener
-ball1:addEventListener("touch", ball.createOnTouch(ball1))
+Ball1:addEventListener("touch", ball.createOnTouch(Ball1))
 ballText:addEventListener("touch", animateText(ballText))
 Runtime:addEventListener("collision", collisionHandler.onCollision)
 
 
 
-
 local function gameLoop()
-  if (ball1.x < -10 or
-        ball1.x > display.contentWidth + 10 or
-        ball1.y < -10 or
-        ball1.y > display.contentHeight + 10)
+  if (Ball1.x < -10 or
+        Ball1.x > display.contentWidth + 10 or
+        Ball1.y < -10 or
+        Ball1.y > display.contentHeight + 10)
   then
-    ball1.x = display.contentCenterX
-    ball1.y = const.ballYPosition
-    ball1:setLinearVelocity(0, 0)
-    ball1.alpha = 0
-
-    transition.to(ball1, { alpha = 1, time = 4000, })
+    ball.startingPhaseBall(Ball1)
   end
 end
 
