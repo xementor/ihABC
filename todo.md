@@ -9,7 +9,7 @@
 - [x] refractored code
 - [x] onclick saying select c and first need animation of game command
 
-- [ ] box Text should disappear
+- [x] box Text should disappear
 
 - [ ] on collition with box
 - [ ] if wrong ball is selection , add warning sound and say that it is this word and add command

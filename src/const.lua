@@ -8,6 +8,7 @@ M.fontSize = 50
 M.boxGap = 5
 M.boxPositionX = 55
 M.ballYPosition = display.contentHeight - M.error
+M.ballXPosition = display.contentCenterX
 M.platformWidth = 50
 M.ballText = { "A", "B", "C" }
 M.selectedAlpha = {}

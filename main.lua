@@ -29,13 +29,13 @@ local box3 = boxesModule.createBox(
 
 local platform = barrier.createPlatform()
 Ball1 = ball.createBall()
-local ballText = ball.createBallAlphabet(const.getTargetText(const.i))
+BallText = ball.createBallAlphabet(const.getTargetText(const.i))
 local leftBoundary = barrier.createLeftBoundary()
 local rightBoundary = barrier.createRightBoundary()
 
 
 
-local function animateText(ball)
+function animateText(ball)
   local function vong(event)
     transition.to(ball,
       {
@@ -60,7 +60,7 @@ local function animateText(ball)
   return vong
 end
 
-animateText(ballText)()
+animateText(BallText)()
 
 
 physics.addBody(platform, "static")
@@ -73,7 +73,7 @@ physics.addBody(Ball1, "dynamic", { bounce = 0.3 })
 
 -- Collision and EventListener
 Ball1:addEventListener("touch", ball.createOnTouch(Ball1))
-ballText:addEventListener("touch", animateText(ballText))
+BallText:addEventListener("touch", animateText(BallText))
 Runtime:addEventListener("collision", collisionHandler.onCollision)
 
 

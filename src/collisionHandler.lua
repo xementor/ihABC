@@ -2,15 +2,9 @@ local const = require "src.const"
 local ball  = require "src.ball"
 local M     = {}
 
-function M.restoreShip()
-  Ball1.y = 500
-end
-
 function M.onCollision(event)
   local obj1 = event.object1
   local obj2 = event.object2
-
-  print(Ball1.platformTouched)
 
 
   if (event.phase == "began") then
@@ -20,9 +14,11 @@ function M.onCollision(event)
         ) then
       Ball1.platformTouched = false
       const.i = const.i + 1
+      BallText.text = const.getTargetText(const.i)
+      animateText(BallText)()
       display.remove(obj1)
+      ball.startingPhaseBall(Ball1)
     elseif (obj1.myName == "platform" and obj2.myName == "ball") then
-      print("why")
       Ball1.platformTouched = true
     end
   end
