@@ -33,10 +33,40 @@ BallText = ball.createBallAlphabet(const.getTargetText(const.i))
 local leftBoundary = barrier.createLeftBoundary()
 local rightBoundary = barrier.createRightBoundary()
 
+-- Sound
+local function readAlphabet(ch)
+  if ch == nill then return end
+  local text = string.lower(ch)
+  local explosionSound = audio.loadSound("sounds/" .. text .. ".mp3")
+  audio.play(explosionSound)
+end
+
+local function readCommand(text)
+  if text == nill then return end
+  local eta = audio.loadSound("sounds/ball.m4a")
+  audio.play(eta)
+  timer.performWithDelay(500, function()
+    readAlphabet(text)
+  end
+  )
+
+  timer.performWithDelay(1000, function()
+    audio.play(audio.loadSound("sounds/kick.m4a"))
+  end
+  )
+end
+
+
 
 
 function animateText(ball)
   local function vong(event)
+    local ch = const.getTargetText(const.i)
+    readAlphabet(ch)
+    timer.performWithDelay(1000, function()
+      readCommand(ch)
+    end
+    )
     transition.to(ball,
       {
         x = display.contentCenterX,
@@ -79,7 +109,12 @@ Runtime:addEventListener("collision", collisionHandler.onCollision)
 
 
 local function gameLoop()
-  if (Ball1.x < -10 or
+  if (const.i > 3) then
+    local gameEnd    = display.newText("Game End", display.contentCenterX, display.contentCenterY)
+    gameEnd.fontSize = 100
+    display.remove(Ball1)
+    Ball1 = nil
+  elseif (Ball1.x < -10 or
         Ball1.x > display.contentWidth + 10 or
         Ball1.y < -10 or
         Ball1.y > display.contentHeight + 10)
