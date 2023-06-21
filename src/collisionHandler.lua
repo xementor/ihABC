@@ -18,12 +18,37 @@ function M.onCollision(event)
           and
           obj2.myName == "ball" and Ball1.platformTouched
         ) then
+      -- correct sound
       audio.play(audio.loadSound("sounds/correct.mp3"))
-      Ball1.platformTouched = false
-      const.i               = const.i + 1
-      BallText.text         = const.getTargetText(const.i)
+
+      -- change charecter
+      const.i       = const.i + 1
+      BallText.text = const.getTargetText(const.i)
+
+      -- remove the box
       display.remove(obj1)
+
+      -- Ball
+      Ball1.platformTouched = false
       Ball1.alpha = 0
+
+      -- Additional screen for A for Apple
+      local text = display.newText({
+        text = const.getTargetWord(const.i),
+        x = display.contentCenterX,
+        y = display.contentCenterX,
+        font = native.systemFont,
+        fontSize = const.fontSize,
+        align = "center"
+      })
+
+      timer.performWithDelay(1000, function()
+        display.remove(text)
+      end
+      )
+
+
+
       timer.performWithDelay(1000, function()
         animateText(BallText)()
         ball.startingPhaseBall(Ball1)

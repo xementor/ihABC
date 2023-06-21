@@ -58,7 +58,6 @@ end
 
 
 
-audio.play(audio.loadSound("sounds/bounce.acc"))
 
 function animateText(ball)
   local function vong(event)
@@ -75,13 +74,16 @@ function animateText(ball)
       }
     )
 
-    transition.scaleTo(ball, { xScale = 2.5, yScale = 2.5, time = 500 })
-    transition.scaleTo(ball, { delay = 500, xScale = 2.0, yScale = 2, time = 100 })
-    transition.scaleTo(ball, { delay = 500, xScale = .5, yScale = .5 })
+    firstDuartion = 500
+    second = 2000
+    thirdDuration = second
+    transition.scaleTo(ball, { xScale = 2.5, yScale = 2.5, time = firstDuartion })
+    transition.scaleTo(ball, { delay = firstDuartion, xScale = 2.4, yScale = 2.4, time = second })
+    transition.scaleTo(ball, { delay = second, xScale = .5, yScale = .5 })
 
     transition.to(ball,
       {
-        delay = 600,
+        delay = thirdDuration,
         time  = 500,
         x     = display.contentWidth / 2,
         y     = display.contentHeight + const.platformWidth / 2,
