@@ -58,6 +58,7 @@ end
 
 
 
+audio.play(audio.loadSound("sounds/bounce.acc"))
 
 function animateText(ball)
   local function vong(event)

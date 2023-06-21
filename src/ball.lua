@@ -9,6 +9,7 @@ function M.createBall()
   ball.isBullet = true
   ball.myName = "ball"
   ball.platformTouched = false
+  ball.onPlatform = true
   return ball
 end
 
@@ -29,6 +30,7 @@ function M.createOnTouch(ball2)
   local startX, startY
 
   local function onTouch(event)
+    -- audio.play(audio.loadSound("sounds/tap.wav"))
     local phase = event.phase
     if phase == "began" then
       startX = event.x
@@ -60,6 +62,9 @@ function M.createOnTouch(ball2)
 end
 
 function M.startingPhaseBall(ball)
+  if ball == nill then return end
+  ball.isVisiable = false
+  ball.onPlatform = true
   ball.x = const.ballXPosition
   ball.y = const.ballYPosition
   ball:setLinearVelocity(0, 0)
