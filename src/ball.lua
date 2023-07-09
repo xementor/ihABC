@@ -22,6 +22,7 @@ function M.createBallAlphabet(text)
     fontSize = 50,
     align = "center"
   })
+  ballAlphabet.isTouchable = true
   ballAlphabet:setTextColor(1)
   return ballAlphabet
 end
@@ -33,6 +34,7 @@ function M.createOnTouch(ball2)
     -- audio.play(audio.loadSound("sounds/tap.wav"))
     local phase = event.phase
     if phase == "began" then
+      ball2.isTouchable = false
       startX = event.x
       startY = event.y
       -- Handle initial touch event
@@ -52,6 +54,7 @@ function M.createOnTouch(ball2)
       elseif phase == "ended" or phase == "cancelled" then
         display.getCurrentStage():setFocus(nil)
         ball2.isFocus = false
+        ball2.isTouchable = true
       end
     end
 
