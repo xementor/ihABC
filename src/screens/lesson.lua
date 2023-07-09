@@ -46,8 +46,6 @@ local function readCommand(text)
 end
 
 
-
-
 function animateText(ballText)
   if not ballText.isTouchable then return end
 
@@ -85,12 +83,12 @@ function animateText(ballText)
   return vong
 end
 
-local function gameLoop()
+local function gameLoop(group)
   if (const.i > 3) then
-    local gameEnd    = display.newText("Game End", display.contentCenterX, display.contentCenterY)
-    gameEnd.fontSize = 100
-    display.remove(Ball1)
-    Ball1 = nil
+    -- local gameEnd = display.newText(group, "Game End", display.contentCenterX, display.contentCenterY)
+    -- group.removed(gameEnd)
+    -- gameEnd.fontSize = 100
+    const.i = 1
     gotoMenu()
   elseif (Ball1.x < -10 or
         Ball1.x > display.contentWidth + 10 or
@@ -111,11 +109,13 @@ function scene:create(event)
 
   -- Code here runs when the scene is first created but has not yet appeared on screen
   physics.pause()
-  backgroundModule.createBackground()
+
 
   local box1 = boxesModule.createBox(
     const.boxPositionX, 10, const.ballText[1], { 1, 0, 0 }
   )
+
+
   local box2 = boxesModule.createBox(
     const.boxPositionX + const.boxSize + const.boxGap,
     10, const.ballText[2],
@@ -134,6 +134,17 @@ function scene:create(event)
   BallText = ball.createBallAlphabet(const.getTargetText(const.i))
   local leftBoundary = barrier.createLeftBoundary()
   local rightBoundary = barrier.createRightBoundary()
+
+  -- Add to screengroup
+  sceneGroup:insert(box1.boxGroup)
+  sceneGroup:insert(box2.boxGroup)
+  sceneGroup:insert(box3.boxGroup)
+
+  sceneGroup:insert(platform)
+  sceneGroup:insert(Ball1)
+  sceneGroup:insert(BallText)
+  sceneGroup:insert(leftBoundary)
+  sceneGroup:insert(rightBoundary)
 
   -- Collision and EventListener
   Ball1:addEventListener("touch", ball.createOnTouch(Ball1))
@@ -161,7 +172,11 @@ function scene:show(event)
     -- Code here runs when the scene is entirely on screen
     physics.start()
     Runtime:addEventListener("collision", collisionHandler.onCollision)
-    gameLoopTimer = timer.performWithDelay(500, gameLoop, 0)
+
+    local function gameLoopP()
+      return gameLoop(self.view)
+    end
+    gameLoopTimer = timer.performWithDelay(500, gameLoopP, 0)
   end
 end
 

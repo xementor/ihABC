@@ -4,7 +4,6 @@ local M = {}
 
 function M.createBox(x, y, text, color)
     local boxGroup = display.newGroup()
-
     local box = display.newRect(boxGroup, x, y, const.boxSize, const.boxSize)
     box.myName = text
 
@@ -21,7 +20,7 @@ function M.createBox(x, y, text, color)
     })
     boxAlphabet:setTextColor(unpack(color))
 
-    return { box = box, boxAlphabet = boxAlphabet };
+    return { box = box, boxAlphabet = boxAlphabet, boxGroup = boxGroup };
 end
 
 return M
