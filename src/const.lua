@@ -1,4 +1,5 @@
 local M = {}
+local lessonGenerate = require "src.data.lessons"
 
 M.height = 570
 M.ballRadius = 30
@@ -14,22 +15,10 @@ M.i = 1
 
 
 
-M.ballText = { "A", "B", "C" }
-M.ballWord = { "", "Apple", "Ball", "Cat" }
+M.lesson1 = lessonGenerate.generatorLesson({ "A", "B", "C" }
+, { "", "Apple", "Ball", "Cat" })
 
-M.lesson2 = {
-  ballText = { "D", "E", "F" },
-  ballWord = { "", "Doll", "Eagle", "Food" },
-
-  getTargetWord = function(i)
-    return M.lesson2.ballWord[i]
-  end
-  ,
-  getTargetText = function(i)
-    return M.lesson2.ballText[i]
-  end,
-}
-
+M.lesson2 = lessonGenerate.generatorLesson({ "D", "E", "F" }, { "", "Dog", "Eagle", "Frog" })
 M.lesson = {}
 
 
