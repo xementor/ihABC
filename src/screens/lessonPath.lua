@@ -10,6 +10,7 @@ local scene     = composer.newScene()
 local centerX   = display.contentCenterX
 local startY    = display.contentHeight - 50
 local lessonGap = 80
+local abc       = require "src.data.abc"
 
 local function lessonTapped(event)
   local lesson = event.target.lesson
@@ -19,23 +20,26 @@ local function lessonTapped(event)
     effect = "fade",
     time = 500,
     params = {
-      someKey = "someValue",
-      someOtherKey = 10,
-      extraData = { name = "ih.zonaid" }
+      lesson = { content = lesson.content }
     }
   }
   composer.gotoScene("src.screens.lesson", options)
 end
 
-local function createLessonTrack(path)
+local function createLessonTrack(pathString)
   local group = display.newGroup()
+  local path = const.getPath(pathString)
+  print(pathString)
+  local numLesson = #(path.lessons)
 
-  for i = 1, 10 do
+  for i = 1, numLesson do
     local y = startY - ((i - 1) * lessonGap)
 
     local lesson = {
-      title = path .. " " .. i,
-      description = "Description for" .. path .. " " .. i
+      title = pathString .. " " .. i,
+      description = "Description for" .. pathString .. " " .. i,
+      index = i,
+      content = path.lessons[i]
     }
 
     local lessonCircle = display.newCircle(group, centerX, y, 20)

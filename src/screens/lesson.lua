@@ -18,7 +18,7 @@ local collisionHandler = require("src.collisionHandler")
 physics.start()
 
 -- global variable
-local lesson
+local gameLoopTimer
 
 -- Navigation
 local function gotoMenu(event)
@@ -112,14 +112,14 @@ end
 function scene:create(event)
   local sceneGroup = self.view
 
-  print(event.params.extraData.name)
+  local content = event.params.lesson.content
   -- Code here runs when the scene is first created but has not yet appeared on screen
   physics.pause()
 
   -- resetting index
   const.i = 1
 
-  const.lesson = const.lesson2
+  const.lesson = content
 
   local box1 = boxesModule.createBox(
     const.boxPositionX, 10, const.lesson.ballText[1], { 1, 0, 0 }

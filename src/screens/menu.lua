@@ -37,11 +37,11 @@ function scene:create(event)
   background.y = display.contentCenterY
 
   local box = display.newRect(sceneGroup, 100, 100, const.boxSize, const.boxSize)
-  box.myName = "ABC"
+  box.myName = const.path1Name
   box:addEventListener("tap", lessonTapped)
 
   local box2 = display.newRect(sceneGroup, 100 + 20 + 100, 100 + 100 + 20, const.boxSize, const.boxSize)
-  box2.myName = "BAN"
+  box2.myName = const.path2Name
   box2:addEventListener("tap", lessonTapped)
 end
 
