@@ -1,28 +1,64 @@
-local composer = require("composer")
-local const = require "src.const"
+local composer  = require("composer")
+local const     = require("src.const")
 
-local scene = composer.newScene()
+local scene     = composer.newScene()
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-
+local centerX   = display.contentCenterX
+local startY    = display.contentHeight - 50
+local lessonGap = 80
 
 local function lessonTapped(event)
-  local pathName = event.target.myName
-
+  local lesson = event.target.lesson
+  print("Selected lesson:", lesson.title)
+  -- Implement the logic to navigate to the corresponding lesson here
   local options = {
     effect = "fade",
     time = 500,
     params = {
       someKey = "someValue",
       someOtherKey = 10,
-      extraData = { path = pathName }
+      extraData = { name = "ih.zonaid" }
     }
   }
-  composer.gotoScene("src.screens.lessonPath", options)
+  composer.gotoScene("src.screens.lesson", options)
 end
+
+local function createLessonTrack(path)
+  local group = display.newGroup()
+
+  for i = 1, 10 do
+    local y = startY - ((i - 1) * lessonGap)
+
+    local lesson = {
+      title = path .. " " .. i,
+      description = "Description for" .. path .. " " .. i
+    }
+
+    local lessonCircle = display.newCircle(group, centerX, y, 20)
+    lessonCircle:setFillColor(0.8, 0.8, 0.8)
+    lessonCircle.lesson = lesson
+    lessonCircle:addEventListener("tap", lessonTapped)
+
+    local lessonText = display.newText({
+      parent = group,
+      text = lesson.title,
+      x = centerX + 50,
+      y = y,
+      fontSize = 14
+    })
+    lessonText.anchorX = 0
+    lessonText:setFillColor(0)
+  end
+
+  return group
+end
+
+
+
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -32,17 +68,38 @@ end
 function scene:create(event)
   local sceneGroup = self.view
   -- Code here runs when the scene is first created but has not yet appeared on screen
+
+  -- extraData
+  local path = event.params.extraData.path
+
+  -- init ui
   local background = display.newImageRect(sceneGroup, "background.png", 360, const.height)
   background.x = display.contentCenterX
   background.y = display.contentCenterY
 
-  local box = display.newRect(sceneGroup, 100, 100, const.boxSize, const.boxSize)
-  box.myName = "ABC"
-  box:addEventListener("tap", lessonTapped)
+  local lessonTrack = createLessonTrack(path)
 
-  local box2 = display.newRect(sceneGroup, 100 + 20 + 100, 100 + 100 + 20, const.boxSize, const.boxSize)
-  box2.myName = "BAN"
-  box2:addEventListener("tap", lessonTapped)
+  local scrollView = display.newGroup()
+  scrollView:insert(lessonTrack)
+  sceneGroup:insert(scrollView)
+
+
+  local function scrollListener(event1)
+    local phase = event1.phase
+    local y = event1.y
+
+    if phase == "began" then
+      scrollView.yStart = y
+    elseif phase == "moved" then
+      local dy = y - scrollView.yStart
+      scrollView.y = scrollView.y + dy
+      scrollView.yStart = y
+    end
+
+    return true
+  end
+
+  scrollView:addEventListener("touch", scrollListener)
 end
 
 -- show()
