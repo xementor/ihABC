@@ -14,7 +14,7 @@ function M.onCollision(event)
       audio.setVolume(0.2, { channel = 1 })
       audio.play(bounceSound, { channel = 1 })
     end
-    if (obj1.myName == const.getTargetText(const.i)
+    if (obj1.myName == const.lesson.getTargetText(const.i)
           and
           obj2.myName == "ball" and Ball1.platformTouched
         ) then
@@ -23,7 +23,7 @@ function M.onCollision(event)
 
       -- change charecter
       const.i       = const.i + 1
-      BallText.text = const.getTargetText(const.i)
+      BallText.text = const.lesson.getTargetText(const.i)
 
       -- remove the box
       display.remove(obj1)
@@ -34,7 +34,7 @@ function M.onCollision(event)
 
       -- Additional screen for A for Apple
       local text = display.newText({
-        text = const.getTargetWord(const.i),
+        text = const.lesson.getTargetWord(const.i),
         x = display.contentCenterX,
         y = display.contentCenterX,
         font = native.systemFont,

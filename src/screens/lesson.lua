@@ -17,6 +17,9 @@ local collisionHandler = require("src.collisionHandler")
 
 physics.start()
 
+-- global variable
+local lesson
+
 -- Navigation
 local function gotoMenu(event)
   composer.removeScene("src.screens.lesson", { time = 800, effect = "crossFade" })
@@ -52,7 +55,7 @@ function animateText(ballText)
 
 
   local function vong(event)
-    local ch = const.getTargetText(const.i)
+    local ch = const.lesson.getTargetText(const.i)
     readAlphabet(ch)
     timer.performWithDelay(1000, function()
       readCommand(ch)
@@ -91,7 +94,6 @@ local function gameLoop(group)
     -- gameEnd.fontSize = 100
     display.remove(Ball1)
     Ball1 = nil
-    const.i = 1
     gotoMenu()
   elseif (Ball1.x < -10 or
         Ball1.x > display.contentWidth + 10 or
@@ -110,31 +112,36 @@ end
 function scene:create(event)
   local sceneGroup = self.view
 
+  print(event.params.extraData.name)
   -- Code here runs when the scene is first created but has not yet appeared on screen
   physics.pause()
 
+  -- resetting index
+  const.i = 1
+
+  const.lesson = const.lesson2
 
   local box1 = boxesModule.createBox(
-    const.boxPositionX, 10, const.ballText[1], { 1, 0, 0 }
+    const.boxPositionX, 10, const.lesson.ballText[1], { 1, 0, 0 }
   )
 
 
   local box2 = boxesModule.createBox(
     const.boxPositionX + const.boxSize + const.boxGap,
-    10, const.ballText[2],
+    10, const.lesson.ballText[2],
     { 0, 1, 0 }
   )
 
   local box3 = boxesModule.createBox(
     const.boxPositionX + const.boxSize + 2 * const.boxGap + const.boxSize,
     10,
-    const.ballText[3],
+    const.lesson.ballText[3],
     { 0, 0, 1 }
   )
 
   local platform = barrier.createPlatform()
   Ball1 = ball.createBall()
-  BallText = ball.createBallAlphabet(const.getTargetText(const.i))
+  BallText = ball.createBallAlphabet(const.lesson.getTargetText(const.i))
   local leftBoundary = barrier.createLeftBoundary()
   local rightBoundary = barrier.createRightBoundary()
 

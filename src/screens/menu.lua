@@ -15,7 +15,16 @@ local function lessonTapped(event)
   local lesson = event.target.lesson
   print("Selected lesson:", lesson.title)
   -- Implement the logic to navigate to the corresponding lesson here
-  composer.gotoScene("src.screens.lesson")
+  local options = {
+    effect = "fade",
+    time = 500,
+    params = {
+      someKey = "someValue",
+      someOtherKey = 10,
+      extraData = { name = "ih.zonaid" }
+    }
+  }
+  composer.gotoScene("src.screens.lesson", options)
 end
 
 local function createLessonTrack()

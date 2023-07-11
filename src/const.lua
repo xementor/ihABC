@@ -10,17 +10,27 @@ M.boxPositionX = 55
 M.ballYPosition = display.contentHeight - M.error
 M.ballXPosition = display.contentCenterX
 M.platformWidth = 50
-M.ballText = { "A", "B", "C" }
-M.ballWord = { "", "Apple", "Ball", "Cat" }
-M.selectedAlpha = {}
 M.i = 1
 
-function M.getTargetText(i)
-  return M.ballText[i]
-end
 
-function M.getTargetWord(i)
-  return M.ballWord[i]
-end
+
+M.ballText = { "A", "B", "C" }
+M.ballWord = { "", "Apple", "Ball", "Cat" }
+
+M.lesson2 = {
+  ballText = { "D", "E", "F" },
+  ballWord = { "", "Doll", "Eagle", "Food" },
+
+  getTargetWord = function(i)
+    return M.lesson2.ballWord[i]
+  end
+  ,
+  getTargetText = function(i)
+    return M.lesson2.ballText[i]
+  end,
+}
+
+M.lesson = {}
+
 
 return M
