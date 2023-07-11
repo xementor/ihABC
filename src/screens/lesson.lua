@@ -19,6 +19,7 @@ physics.start()
 
 -- Navigation
 local function gotoMenu(event)
+  composer.removeScene("src.screens.lesson", { time = 800, effect = "crossFade" })
   composer.gotoScene("src.screens.menu")
 end
 
@@ -88,6 +89,8 @@ local function gameLoop(group)
     -- local gameEnd = display.newText(group, "Game End", display.contentCenterX, display.contentCenterY)
     -- group.removed(gameEnd)
     -- gameEnd.fontSize = 100
+    display.remove(Ball1)
+    Ball1 = nil
     const.i = 1
     gotoMenu()
   elseif (Ball1.x < -10 or
@@ -187,8 +190,12 @@ function scene:hide(event)
 
   if (phase == "will") then
     -- Code here runs when the scene is on screen (but is about to go off screen)
+    timer.cancel(gameLoopTimer)
   elseif (phase == "did") then
     -- Code here runs immediately after the scene goes entirely off screen
+    Runtime:removeEventListener("collision", collisionHandler.onCollision)
+    physics.pause()
+    composer.removeScene("src.screens.lesson", { time = 800, effect = "crossFade" })
   end
 end
 
