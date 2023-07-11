@@ -16,8 +16,6 @@ local function lessonTapped(event)
     effect = "fade",
     time = 500,
     params = {
-      someKey = "someValue",
-      someOtherKey = 10,
       extraData = { path = pathName }
     }
   }
@@ -40,7 +38,7 @@ function scene:create(event)
   box.myName = const.path1Name
   box:addEventListener("tap", lessonTapped)
 
-  local box2 = display.newRect(sceneGroup, 100 + 20 + 100, 100 + 100 + 20, const.boxSize, const.boxSize)
+  local box2 = display.newRect(sceneGroup, 100 + 40 + 100, 100, const.boxSize, const.boxSize)
   box2.myName = const.path2Name
   box2:addEventListener("tap", lessonTapped)
 end

@@ -68,9 +68,9 @@ function animateText(ballText)
       }
     )
 
-    firstDuartion = 500
-    second = 2000
-    thirdDuration = second
+    local firstDuartion = 500
+    local second = 2000
+    local thirdDuration = second
     transition.scaleTo(ballText, { xScale = 2.5, yScale = 2.5, time = firstDuartion })
     transition.scaleTo(ballText, { delay = firstDuartion, xScale = 2.4, yScale = 2.4, time = second })
     transition.scaleTo(ballText, { delay = second, xScale = .5, yScale = .5 })
