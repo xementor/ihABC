@@ -5,7 +5,12 @@ function M.createBall()
   local error = 5
   local ballYPosition = display.contentHeight - error
 
-  local ball = display.newCircle(const.ballXPosition, ballYPosition, const.ballRadius)
+
+  local ball = display.newImage("images/ball100.png", const.ballXPosition, ballYPosition)
+  -- Set the anchor point to the center for accurate positioning
+  ball.anchorX = 0.5
+  ball.anchorY = 0.5
+  -- local ball = display.newCircle(const.ballXPosition, ballYPosition, const.ballRadius)
   ball.isBullet = true
   ball.myName = "ball"
   ball.platformTouched = false

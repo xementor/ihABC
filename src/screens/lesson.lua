@@ -124,8 +124,13 @@ function scene:create(event)
 
   -- resetting index
   const.i = 1
-
   const.lesson = content
+
+  -- UI
+  local background = display.newImageRect(sceneGroup, "images/back.jpg", display.contentWidth,
+    display.contentHeight)
+  background.x = display.contentCenterX
+  background.y = display.contentCenterY
 
   local box1 = boxesModule.createBox(
     const.boxPositionX, const.boxPositionY, const.lesson.ballText[1], { 1, 0, 0 }
