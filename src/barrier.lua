@@ -3,7 +3,9 @@ local const = require("src.const")
 local M = {}
 
 function M.createPlatform()
-  local platform = display.newRect(0, 0, display.contentWidth, const.platformWidth)
+  -- local platform = display.newRect(0, 0, display.contentWidth, const.platformWidth)
+  local platform = display.newImage("images/plat2.png", display.contentWidth, const.platformWidth)
+
   platform.myName = "platform"
   platform:setFillColor(0, .2, .2)
   platform.x = display.contentCenterX
