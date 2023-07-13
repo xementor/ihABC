@@ -49,8 +49,10 @@ function M.onCollision(event)
 
 
 
-      timer.performWithDelay(1000, function()
+      timer.performWithDelay(2000, function()
         animateText(BallText)()
+      end)
+      timer.performWithDelay(4000, function()
         ball.startingPhaseBall(Ball1)
       end)
     elseif (obj1.myName == "platform" and obj2.myName == "ball") then

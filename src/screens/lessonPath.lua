@@ -10,7 +10,6 @@ local scene     = composer.newScene()
 local centerX   = display.contentCenterX
 local startY    = display.contentHeight - 50
 local lessonGap = 80
-local abc       = require "src.data.abc"
 
 local function lessonTapped(event)
   local lesson = event.target.lesson

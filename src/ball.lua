@@ -19,7 +19,7 @@ function M.createBallAlphabet(text)
     x = display.contentCenterX,
     y = display.contentCenterY,
     font = native.systemFont,
-    fontSize = 50,
+    fontSize = const.fontSize,
     align = "center"
   })
   ballAlphabet.isTouchable = true
@@ -65,7 +65,7 @@ function M.createOnTouch(ball2)
 end
 
 function M.startingPhaseBall(ball)
-  if ball == nill then return end
+  if ball == nil then return end
   ball.isVisiable = false
   ball.onPlatform = true
   ball.x = const.ballXPosition

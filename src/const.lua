@@ -3,27 +3,29 @@ local lessonGenerate = require "src.data.lessons"
 local abc            = require "src.data.abc"
 local banABC         = require "src.data.banABC"
 
+-- box
 M.height             = 570
-M.ballRadius         = 30
-M.boxSize            = 100
+M.boxGap             = 50
+M.boxSize            = (display.contentWidth - 2 * M.boxGap) / 3
+M.fontSize           = 100
+M.boxPositionX       = M.boxSize / 2
+M.boxPositionY       = 0
+
+-- ball
+M.ballRadius         = 50
 M.error              = 5
-M.fontSize           = 50
-M.boxGap             = 5
-M.boxPositionX       = 55
-M.ballYPosition      = display.contentHeight - M.error
+M.ballYPosition      = display.contentHeight --display.contentHeight - M.error
 M.ballXPosition      = display.contentCenterX
-M.platformWidth      = 50
-M.i                  = 1
+M.platformWidth      = 100
 
 
+M.i = 1
+
+
+-- pathName
 M.path1Name = "ABC"
 M.path2Name = "BAN"
 
-
-M.lesson1 = lessonGenerate.generatorLesson({ "A", "B", "C" }
-, { "", "Apple", "Ball", "Cat" })
-
-M.lesson2 = lessonGenerate.generatorLesson({ "D", "E", "F" }, { "", "Dog", "Eagle", "Frog" })
 M.lesson = {}
 
 function M.getPath(pathString)

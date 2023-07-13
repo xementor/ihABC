@@ -51,9 +51,12 @@ end
 
 
 function animateText(ballText)
-  if not ballText.isTouchable then return end
+  if not ballText.isTouchable then
+    return function()
+    end
+  end
 
-
+  ballText.isTouchable = false
   local function vong(event)
     local ch = const.lesson.getTargetText(const.i)
     readAlphabet(ch)
@@ -84,6 +87,7 @@ function animateText(ballText)
       }
     )
   end
+  -- ballText.isTouchable = true
   return vong
 end
 
@@ -122,19 +126,19 @@ function scene:create(event)
   const.lesson = content
 
   local box1 = boxesModule.createBox(
-    const.boxPositionX, 10, const.lesson.ballText[1], { 1, 0, 0 }
+    const.boxPositionX, const.boxPositionY, const.lesson.ballText[1], { 1, 0, 0 }
   )
 
 
   local box2 = boxesModule.createBox(
     const.boxPositionX + const.boxSize + const.boxGap,
-    10, const.lesson.ballText[2],
+    const.boxPositionY, const.lesson.ballText[2],
     { 0, 1, 0 }
   )
 
   local box3 = boxesModule.createBox(
     const.boxPositionX + const.boxSize + 2 * const.boxGap + const.boxSize,
-    10,
+    const.boxPositionY,
     const.lesson.ballText[3],
     { 0, 0, 1 }
   )
