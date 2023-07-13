@@ -21,9 +21,9 @@ physics.start()
 local gameLoopTimer
 
 -- Navigation
-local function gotoMenu(event)
+local function gotoLessonPath(event)
   composer.removeScene("src.screens.lesson", { time = 800, effect = "crossFade" })
-  composer.gotoScene("src.screens.menu")
+  composer.gotoScene("src.screens.lessonPath")
 end
 
 -- Sound
@@ -94,7 +94,7 @@ local function gameLoop(group)
     -- gameEnd.fontSize = 100
     display.remove(Ball1)
     Ball1 = nil
-    gotoMenu()
+    gotoLessonPath()
   elseif (Ball1.x < -10 or
         Ball1.x > display.contentWidth + 10 or
         Ball1.y < -10 or
