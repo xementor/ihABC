@@ -51,41 +51,41 @@ end
 
 
 function animateText(ballText)
-  if not ballText.isTouchable then
-    return function()
-    end
-  end
-
-  ballText.isTouchable = false
   local function vong(event)
-    local ch = const.lesson.getTargetText(const.i)
-    readAlphabet(ch)
-    timer.performWithDelay(1000, function()
-      readCommand(ch)
+    if event.phase == "ended" and ballText.isTouchable then
+      ballText.isTouchable = false
+      local ch = const.lesson.getTargetText(const.i)
+      readAlphabet(ch)
+      timer.performWithDelay(1000, function()
+        readCommand(ch)
+      end
+      )
+      transition.to(ballText,
+        {
+          x = display.contentCenterX,
+          y = display.contentCenterY,
+        }
+      )
+
+      local firstDuartion = 500
+      local second = 2000
+      local thirdDuration = second
+      transition.scaleTo(ballText, { xScale = 2.5, yScale = 2.5, time = firstDuartion })
+      transition.scaleTo(ballText, { delay = firstDuartion, xScale = 2.4, yScale = 2.4, time = second })
+      transition.scaleTo(ballText, { delay = second, xScale = .5, yScale = .5 })
+
+      transition.to(ballText,
+        {
+          delay      = thirdDuration,
+          time       = 500,
+          x          = display.contentWidth / 2,
+          y          = display.contentHeight + const.platformWidth / 2,
+          onComplete = function()
+            ballText.isTouchable = true -- Reset flag when animation is complete
+          end
+        }
+      )
     end
-    )
-    transition.to(ballText,
-      {
-        x = display.contentCenterX,
-        y = display.contentCenterY,
-      }
-    )
-
-    local firstDuartion = 500
-    local second = 2000
-    local thirdDuration = second
-    transition.scaleTo(ballText, { xScale = 2.5, yScale = 2.5, time = firstDuartion })
-    transition.scaleTo(ballText, { delay = firstDuartion, xScale = 2.4, yScale = 2.4, time = second })
-    transition.scaleTo(ballText, { delay = second, xScale = .5, yScale = .5 })
-
-    transition.to(ballText,
-      {
-        delay = thirdDuration,
-        time  = 500,
-        x     = display.contentWidth / 2,
-        y     = display.contentHeight + const.platformWidth / 2,
-      }
-    )
   end
   -- ballText.isTouchable = true
   return vong
@@ -107,6 +107,8 @@ local function gameLoop(group)
     ball.startingPhaseBall(Ball1)
   end
 end
+
+local function touchEvent(event) print(event.phase) end
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -145,6 +147,7 @@ function scene:create(event)
 
   local platform = barrier.createPlatform()
   Ball1 = ball.createBall()
+  Ball1.alpha = 0
   BallText = ball.createBallAlphabet(const.lesson.getTargetText(const.i))
   local leftBoundary = barrier.createLeftBoundary()
   local rightBoundary = barrier.createRightBoundary()
@@ -180,13 +183,15 @@ function scene:show(event)
   local phase = event.phase
 
   if (phase == "will") then
+    timer.performWithDelay(2000, function()
+      transition.to(Ball1, { time = 2000, alpha = 1, })
+    end)
     -- Code here runs when the scene is still off screen (but is about to come on screen)
   elseif (phase == "did") then
-    animateText(BallText)()
+    animateText(BallText)({ phase = "ended" })
     -- Code here runs when the scene is entirely on screen
     physics.start()
     Runtime:addEventListener("collision", collisionHandler.onCollision)
-
     local function gameLoopP()
       return gameLoop(self.view)
     end

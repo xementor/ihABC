@@ -17,7 +17,7 @@ function M.onCollision(event)
     if (obj1.myName == const.lesson.getTargetText(const.i)
           and
           obj2.myName == "ball" and Ball1.platformTouched
-        ) then
+        ) and BallText.isTouchable then
       -- correct sound
       audio.play(audio.loadSound("sounds/correct.mp3"))
 
@@ -47,10 +47,8 @@ function M.onCollision(event)
       end
       )
 
-
-
       timer.performWithDelay(2000, function()
-        animateText(BallText)()
+        animateText(BallText)({ phase = "ended" })
       end)
       timer.performWithDelay(4000, function()
         ball.startingPhaseBall(Ball1)
