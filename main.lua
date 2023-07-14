@@ -18,4 +18,4 @@ local options = {
     lesson = { content = abc.lessons[3] }
   }
 }
-composer.gotoScene("src.screens.lesson", options)
+composer.gotoScene("src.screens.menu", options)

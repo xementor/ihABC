@@ -98,7 +98,7 @@ local function gameLoop(group)
     -- gameEnd.fontSize = 100
     display.remove(Ball1)
     Ball1 = nil
-    gotoLessonPath()
+    timer.performWithDelay(3000, function() gotoLessonPath() end)
   elseif (Ball1.x < -10 or
         Ball1.x > display.contentWidth + 10 or
         Ball1.y < -10 or
@@ -108,7 +108,6 @@ local function gameLoop(group)
   end
 end
 
-local function touchEvent(event) print(event.phase) end
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions

@@ -1,15 +1,16 @@
-local composer  = require("composer")
-local const     = require("src.const")
+local composer        = require("composer")
+local const           = require("src.const")
 
-local scene     = composer.newScene()
+local scene           = composer.newScene()
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local centerX   = display.contentCenterX
-local startY    = display.contentHeight - 50
-local lessonGap = 80
+local centerX         = display.contentCenterX - (display.contentWidth / 4)
+local startY          = display.contentHeight - 50
+local containerHeight = 250
+local lessonGap       = containerHeight + 50
 
 local function lessonTapped(event)
   local lesson = event.target.lesson
@@ -31,31 +32,61 @@ local function createLessonTrack(pathString)
   print(pathString)
   local numLesson = #(path.lessons)
 
+  local function addExtraSpace(str)
+    local modifiedStr = ""
+    for i = 1, #str do
+      modifiedStr = modifiedStr .. str:sub(i, i)
+      if i < #str then
+        modifiedStr = modifiedStr .. "  "
+      end
+    end
+    return modifiedStr
+  end
+
   for i = 1, numLesson do
     local y = startY - ((i - 1) * lessonGap)
 
-    local lesson = {
-      title = pathString .. " " .. i,
-      description = "Description for" .. pathString .. " " .. i,
-      index = i,
-      content = path.lessons[i]
-    }
+    local function makeLessons(y, variant)
+      local lesson = {
+        title = addExtraSpace(pathString),
+        index = i,
+        content = path.lessons[i]
+      }
+      local group = display.newGroup();
+      local container = display.newRoundedRect(group, display.contentCenterX, y, display.contentWidth - 100,
+        containerHeight, 25)
 
-    local lessonCircle = display.newCircle(group, centerX, y, 20)
-    lessonCircle:setFillColor(0.8, 0.8, 0.8)
-    lessonCircle.lesson = lesson
-    lessonCircle:addEventListener("tap", lessonTapped)
+      if (variant == 2) then
+        container:setFillColor(255 / 255, 98 / 255, 10 / 255)
+      elseif (variant == 3) then
+        container:setFillColor(37 / 255, 37 / 255, 37 / 255)
+      else
+        container:setFillColor(117 / 255, 160 / 255, 200 / 255)
+      end
 
-    local lessonText = display.newText({
-      parent = group,
-      text = lesson.title,
-      x = centerX + 50,
-      y = y,
-      fontSize = 14
-    })
-    lessonText.anchorX = 0
-    lessonText:setFillColor(0)
+
+
+      local fontSize = 120
+      local lessonText = display.newText({
+        parent   = group,
+        text     = lesson.title,
+        x        = container.x,
+        y        = container.y,
+        width    = container.width,
+        height   = container.height,
+        font     = native.systemFontBold,
+        fontSize = fontSize,
+        align    = "center",
+      })
+      lessonText.y = lessonText.y + lessonText.height / 2 - (fontSize / 2)
+      group:addEventListener("touch", lessonTapped)
+      return group
+    end
+
+    local lesson = makeLessons(y, 3)
+    group:insert(lesson)
   end
+
 
   return group
 end
@@ -76,7 +107,7 @@ function scene:create(event)
   local path = event.params.extraData.path
 
   -- init ui
-  local background = display.newImageRect(sceneGroup, "background.png", 360, const.height)
+  local background = display.newImageRect(sceneGroup, "images/back.jpg", display.pixelWidth, display.pixelHeight)
   background.x = display.contentCenterX
   background.y = display.contentCenterY
 

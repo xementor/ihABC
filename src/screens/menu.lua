@@ -30,17 +30,43 @@ end
 function scene:create(event)
   local sceneGroup = self.view
   -- Code here runs when the scene is first created but has not yet appeared on screen
-  local background = display.newImageRect(sceneGroup, "background.png", 360, const.height)
+  local background = display.newImageRect(sceneGroup, "images/back.jpg", display.pixelWidth, display.pixelHeight)
   background.x = display.contentCenterX
   background.y = display.contentCenterY
 
-  local box = display.newRect(sceneGroup, 100, 100, const.boxSize, const.boxSize)
-  box.myName = const.path1Name
-  box:addEventListener("tap", lessonTapped)
 
-  local box2 = display.newRect(sceneGroup, 100 + 40 + 100, 100, const.boxSize, const.boxSize)
-  box2.myName = const.path2Name
-  box2:addEventListener("tap", lessonTapped)
+  local y = display.contentCenterY
+  local boxSize = 400
+  local x = (display.contentCenterX)
+
+  local function boxMaker(x, y, boxSize, boxName)
+    do
+      local fontSize = 100
+      local boxGroup = display.newGroup()
+      local box = display.newRect(boxGroup, x, y, boxSize, boxSize)
+      box.cornerRadius = 20
+      local lap = 10
+      local boxCover = display.newRect(boxGroup, x - lap, y - lap, boxSize + lap, boxSize + lap)
+      local text = display.newText({
+        parent = boxGroup,
+        text = "ABC",
+        x = box.x,
+        y = box.y,
+        font = native.systemFontBold,
+        fontSize = fontSize,
+        align = "center"
+      })
+      text.y = text.y + text.height / 2 - (fontSize / 2)
+      box:setFillColor(117 / 255, 160 / 255, 200 / 255)
+      boxCover:setFillColor(33 / 255, 25 / 255, 25 / 255)
+      boxCover:toBack()
+      boxGroup.myName = boxName
+      sceneGroup:insert(boxGroup)
+      boxGroup:addEventListener("tap", lessonTapped)
+      return boxGroup
+    end
+  end
+  local box = boxMaker(x, y, boxSize, const.path1Name)
 end
 
 -- show()
