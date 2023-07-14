@@ -6,6 +6,7 @@ function M.createBox(x, y, text, color)
     local boxGroup = display.newGroup()
     local box = display.newRect(boxGroup, x, y, const.boxSize, const.boxSize)
     box.myName = text
+    box:setFillColor(255 / 255, 98 / 255, 10 / 255, .8)
 
     local boxAlphabet = display.newText({
         parent = boxGroup,
@@ -14,11 +15,10 @@ function M.createBox(x, y, text, color)
         y = box.y + const.boxSize / 2 - const.fontSize / 2,
         width = box.width,
         height = box.height,
-        font = native.systemFont,
+        font = native.systemFontBold,
         fontSize = const.fontSize,
         align = "center"
     })
-    boxAlphabet:setTextColor(unpack(color))
 
     return { box = box, boxAlphabet = boxAlphabet, boxGroup = boxGroup };
 end

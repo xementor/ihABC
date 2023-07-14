@@ -23,7 +23,14 @@ local path
 -- Navigation
 local function gotoLessonPath(event)
   composer.removeScene("src.screens.lesson", { time = 800, effect = "crossFade" })
-  composer.gotoScene("src.screens.lessonPath")
+  local options = {
+    effect = "fade",
+    time = 500,
+    params = {
+      extraData = { path = path }
+    }
+  }
+  composer.gotoScene("src.screens.lessonPath", options)
 end
 
 -- Sound

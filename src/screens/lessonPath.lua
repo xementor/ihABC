@@ -8,7 +8,7 @@ local scene           = composer.newScene()
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local startY          = display.contentHeight - 50
+local startY          = display.contentHeight - 100
 local containerHeight = 250
 local lessonGap       = containerHeight + 50
 
@@ -27,6 +27,8 @@ local function lessonTapped(event)
       lesson = lesson
     }
   }
+
+  composer.removeScene("src.screens.lessonPath", { time = 800, effect = "crossFade" })
   composer.gotoScene("src.screens.lesson", options)
 end
 
@@ -86,12 +88,22 @@ local function createLessonTrack(pathString)
   for i = 1, numLesson do
     local y = startY - ((i - 1) * lessonGap)
     local lesson
-    if i < levelData.currentLevel then
-      lesson = makeLessons(y, i, 2)
-    elseif i == levelData.currentLevel then
-      lesson = makeLessons(y, i)
+
+    local containerY = y
+    if i > levelData.currentLevel then
+      containerY = startY - (i - levelData.currentLevel) * lessonGap
+    elseif i < levelData.currentLevel then
+      containerY = startY + (levelData.currentLevel - i) * lessonGap
     else
-      lesson = makeLessons(y, i, 3)
+      containerY = startY
+    end
+
+    if i < levelData.currentLevel then
+      lesson = makeLessons(containerY, i, 2)
+    elseif i == levelData.currentLevel then
+      lesson = makeLessons(containerY, i)
+    else
+      lesson = makeLessons(containerY, i, 3)
     end
     group:insert(lesson)
   end
