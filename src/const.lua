@@ -1,7 +1,8 @@
 local M              = {}
 local lessonGenerate = require "src.data.lessons"
-local abc            = require "src.data.abc"
+local abc            = require "src.data.ABC"
 local banABC         = require "src.data.banABC"
+local sabc           = require "src.data.sabc"
 
 -- box
 M.height             = 570
@@ -24,7 +25,7 @@ M.i = 1
 
 -- pathName
 M.path1Name = "ABC"
-M.path2Name = "BAN"
+M.path2Name = "abc"
 
 M.lesson = {}
 
@@ -33,7 +34,7 @@ function M.getPath(pathString)
     return abc
   end
   if pathString == M.path2Name then
-    return banABC
+    return sabc
   end
 end
 

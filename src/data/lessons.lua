@@ -1,9 +1,10 @@
 local M = {}
 
-function M.generatorLesson(ballText, ballWord)
+function M.generatorLesson(ballText, ballWord, lessonPreview)
   local lesson = {}
   lesson.ballText = ballText
   lesson.ballWord = ballWord
+  lesson.lessonPreview = lessonPreview
   -- ballText = { "D", "E", "F" },
   -- ballWord = { "", "Doll", "Eagle", "Food" },
 

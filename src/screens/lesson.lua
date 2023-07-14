@@ -1,6 +1,5 @@
 local composer         = require("composer")
-local const            = require("src.const")
-
+local state            = require("src.data.state")
 local scene            = composer.newScene()
 
 -- -----------------------------------------------------------------------------------
@@ -8,7 +7,6 @@ local scene            = composer.newScene()
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 local physics          = require("physics")
-local backgroundModule = require("src.background")
 local boxesModule      = require("src.boxes")
 local const            = require("src.const")
 local ball             = require("src.ball")
@@ -19,6 +17,8 @@ physics.start()
 
 -- global variable
 local gameLoopTimer
+local lessonNo
+local path
 
 -- Navigation
 local function gotoLessonPath(event)
@@ -96,6 +96,7 @@ local function gameLoop(group)
     -- local gameEnd = display.newText(group, "Game End", display.contentCenterX, display.contentCenterY)
     -- group.removed(gameEnd)
     -- gameEnd.fontSize = 100
+    state.updateLevel(path, lessonNo)
     display.remove(Ball1)
     Ball1 = nil
     timer.performWithDelay(3000, function() gotoLessonPath() end)
@@ -117,7 +118,10 @@ end
 function scene:create(event)
   local sceneGroup = self.view
 
-  local content = event.params.lesson.content
+  local lesson = event.params.lesson
+  local content = lesson.content
+  lessonNo = lesson.index
+  path = lesson.path
   -- Code here runs when the scene is first created but has not yet appeared on screen
   physics.pause()
 

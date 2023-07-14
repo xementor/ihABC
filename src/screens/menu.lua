@@ -49,7 +49,7 @@ function scene:create(event)
       local boxCover = display.newRect(boxGroup, x - lap, y - lap, boxSize + lap, boxSize + lap)
       local text = display.newText({
         parent = boxGroup,
-        text = "ABC",
+        text = boxName,
         x = box.x,
         y = box.y,
         font = native.systemFontBold,
@@ -66,7 +66,9 @@ function scene:create(event)
       return boxGroup
     end
   end
-  local box = boxMaker(x, y, boxSize, const.path1Name)
+  local gap = 50
+  local ABCBox = boxMaker(x, y - (boxSize / 2) - (gap / 2), boxSize, const.path1Name)
+  local abcBox = boxMaker(x, y + (boxSize / 2) + (gap / 2), boxSize, const.path2Name)
 end
 
 -- show()

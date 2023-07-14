@@ -1,5 +1,6 @@
 local composer        = require("composer")
 local const           = require("src.const")
+local state           = require("src.data.state")
 
 local scene           = composer.newScene()
 
@@ -7,20 +8,23 @@ local scene           = composer.newScene()
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local centerX         = display.contentCenterX - (display.contentWidth / 4)
 local startY          = display.contentHeight - 50
 local containerHeight = 250
 local lessonGap       = containerHeight + 50
 
+local levelData
+
+
+
 local function lessonTapped(event)
   local lesson = event.target.lesson
-  print("Selected lesson:", lesson.title)
+  if lesson.index > levelData.currentLevel then return end
   -- Implement the logic to navigate to the corresponding lesson here
   local options = {
     effect = "fade",
     time = 500,
     params = {
-      lesson = { content = lesson.content }
+      lesson = lesson
     }
   }
   composer.gotoScene("src.screens.lesson", options)
@@ -29,7 +33,6 @@ end
 local function createLessonTrack(pathString)
   local group = display.newGroup()
   local path = const.getPath(pathString)
-  print(pathString)
   local numLesson = #(path.lessons)
 
   local function addExtraSpace(str)
@@ -43,47 +46,53 @@ local function createLessonTrack(pathString)
     return modifiedStr
   end
 
-  for i = 1, numLesson do
-    local y = startY - ((i - 1) * lessonGap)
+  local function makeLessons(y, i, variant)
+    local lesson = {
+      title = addExtraSpace(path.lessons[i].lessonPreview),
+      index = i,
+      content = path.lessons[i],
+      path = pathString
+    }
+    local group = display.newGroup();
+    local container = display.newRoundedRect(group, display.contentCenterX, y, display.contentWidth - 100,
+      containerHeight, 25)
 
-    local function makeLessons(y, variant)
-      local lesson = {
-        title = addExtraSpace(pathString),
-        index = i,
-        content = path.lessons[i]
-      }
-      local group = display.newGroup();
-      local container = display.newRoundedRect(group, display.contentCenterX, y, display.contentWidth - 100,
-        containerHeight, 25)
-
-      if (variant == 2) then
-        container:setFillColor(255 / 255, 98 / 255, 10 / 255)
-      elseif (variant == 3) then
-        container:setFillColor(37 / 255, 37 / 255, 37 / 255)
-      else
-        container:setFillColor(117 / 255, 160 / 255, 200 / 255)
-      end
-
-
-
-      local fontSize = 120
-      local lessonText = display.newText({
-        parent   = group,
-        text     = lesson.title,
-        x        = container.x,
-        y        = container.y,
-        width    = container.width,
-        height   = container.height,
-        font     = native.systemFontBold,
-        fontSize = fontSize,
-        align    = "center",
-      })
-      lessonText.y = lessonText.y + lessonText.height / 2 - (fontSize / 2)
-      group:addEventListener("touch", lessonTapped)
-      return group
+    if (variant == 2) then
+      container:setFillColor(255 / 255, 98 / 255, 10 / 255)
+    elseif (variant == 3) then
+      container:setFillColor(37 / 255, 37 / 255, 37 / 255)
+    else
+      container:setFillColor(117 / 255, 160 / 255, 200 / 255)
     end
 
-    local lesson = makeLessons(y, 3)
+    local fontSize = 120
+    local lessonText = display.newText({
+      parent   = group,
+      text     = lesson.title,
+      x        = container.x,
+      y        = container.y,
+      width    = container.width,
+      height   = container.height,
+      font     = native.systemFontBold,
+      fontSize = fontSize,
+      align    = "center",
+    })
+    lessonText.y = lessonText.y + lessonText.height / 2 - (fontSize / 2)
+    group:addEventListener("touch", lessonTapped)
+    group.lesson = lesson
+    return group
+  end
+
+  for i = 1, numLesson do
+    local y = startY - ((i - 1) * lessonGap)
+    local lesson
+    if i < levelData.currentLevel then
+      lesson = makeLessons(y, i, 2)
+    elseif i == levelData.currentLevel then
+      lesson = makeLessons(y, i)
+    else
+      lesson = makeLessons(y, i, 3)
+    end
     group:insert(lesson)
   end
 
@@ -105,6 +114,10 @@ function scene:create(event)
 
   -- extraData
   local path = event.params.extraData.path
+
+  levelData = state.getData(path)
+  print("levelData")
+  print(levelData)
 
   -- init ui
   local background = display.newImageRect(sceneGroup, "images/back.jpg", display.pixelWidth, display.pixelHeight)
