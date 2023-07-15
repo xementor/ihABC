@@ -75,9 +75,9 @@ function M.startingPhaseBall(ball)
   ball.onPlatform = true
   ball.x = const.ballXPosition
   ball.y = const.ballYPosition
-  ball:setLinearVelocity(0, 0)
+  -- ball:setLinearVelocity(0, 0)
   ball.alpha = 0
-  transition.to(ball, { alpha = 1, time = 4000, })
+  transition.to(ball, { alpha = 1, time = 500, })
 end
 
 return M

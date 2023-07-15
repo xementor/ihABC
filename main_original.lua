@@ -27,21 +27,21 @@ local box3 = boxesModule.createBox(
 )
 
 local platform = barrier.createPlatform()
-Ball1 = ball.createBall()
-BallText = ball.createBallAlphabet(const.getTargetText(const.i))
+ball1 = ball.createBall()
+ballText = ball.createBallAlphabet(const.getTargetText(const.i))
 local leftBoundary = barrier.createLeftBoundary()
 local rightBoundary = barrier.createRightBoundary()
 
 -- Sound
 local function readAlphabet(ch)
-  if ch == nill then return end
+  if ch == nil then return end
   local text = string.lower(ch)
   local explosionSound = audio.loadSound("sounds/" .. text .. ".mp3")
   audio.play(explosionSound)
 end
 
 local function readCommand(text)
-  if text == nill then return end
+  if text == nil then return end
   local eta = audio.loadSound("sounds/ball.m4a")
   audio.play(eta)
   timer.performWithDelay(500, function()
@@ -95,7 +95,7 @@ function animateText(ballText)
   return vong
 end
 
-animateText(BallText)()
+animateText(ballText)()
 
 
 physics.addBody(platform, "static")
@@ -104,11 +104,11 @@ physics.addBody(rightBoundary, "static")
 physics.addBody(box1.box, "static")
 physics.addBody(box2.box, "static")
 physics.addBody(box3.box, "static")
-physics.addBody(Ball1, "dynamic", { bounce = 0.3 })
+physics.addBody(ball1, "dynamic", { bounce = 0.3 })
 
 -- Collision and EventListener
-Ball1:addEventListener("touch", ball.createOnTouch(Ball1))
-BallText:addEventListener("touch", animateText(BallText))
+ball1:addEventListener("touch", ball.createOnTouch(ball1))
+ballText:addEventListener("touch", animateText(ballText))
 Runtime:addEventListener("collision", collisionHandler.onCollision)
 
 
@@ -117,14 +117,14 @@ local function gameLoop()
   if (const.i > 3) then
     local gameEnd    = display.newText("Game End", display.contentCenterX, display.contentCenterY)
     gameEnd.fontSize = 100
-    display.remove(Ball1)
-    Ball1 = nil
-  elseif (Ball1.x < -10 or
-        Ball1.x > display.contentWidth + 10 or
-        Ball1.y < -10 or
-        Ball1.y > display.contentHeight + 10)
+    display.remove(ball1)
+    ball1 = nil
+  elseif (ball1.x < -10 or
+        ball1.x > display.contentWidth + 10 or
+        ball1.y < -10 or
+        ball1.y > display.contentHeight + 10)
   then
-    ball.startingPhaseBall(Ball1)
+    ball.startingPhaseBall(ball1)
   end
 end
 

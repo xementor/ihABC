@@ -13,7 +13,7 @@ local function lessonTapped(event)
   local pathName = event.target.myName
 
   local options = {
-    effect = "fade",
+    effect = "slideLeft",
     time = 500,
     params = {
       extraData = { path = pathName }
@@ -45,8 +45,8 @@ function scene:create(event)
       local boxGroup = display.newGroup()
       local box = display.newRect(boxGroup, x, y, boxSize, boxSize)
       box.cornerRadius = 20
-      local lap = 10
-      local boxCover = display.newRect(boxGroup, x - lap, y - lap, boxSize + lap, boxSize + lap)
+      local lap = 40
+      local boxCover = display.newRect(boxGroup, x, y, boxSize + lap, boxSize + lap)
       local text = display.newText({
         parent = boxGroup,
         text = boxName,
@@ -59,6 +59,7 @@ function scene:create(event)
       text.y = text.y + text.height / 2 - (fontSize / 2)
       box:setFillColor(117 / 255, 160 / 255, 200 / 255)
       boxCover:setFillColor(33 / 255, 25 / 255, 25 / 255)
+      -- boxCover:setFillColor(0, 1, 0)
       boxCover:toBack()
       boxGroup.myName = boxName
       sceneGroup:insert(boxGroup)
@@ -67,8 +68,8 @@ function scene:create(event)
     end
   end
   local gap = 50
-  local ABCBox = boxMaker(x, y - (boxSize / 2) - (gap / 2), boxSize, const.path1Name)
-  local abcBox = boxMaker(x, y + (boxSize / 2) + (gap / 2), boxSize, const.path2Name)
+  boxMaker(x, y - (boxSize / 2) - (gap / 2), boxSize, const.path1Name)
+  boxMaker(x, y + (boxSize / 2) + (gap / 2), boxSize, const.path2Name)
 end
 
 -- show()
