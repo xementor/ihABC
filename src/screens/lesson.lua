@@ -1,5 +1,6 @@
 local composer    = require("composer")
 local state       = require("src.data.state")
+local animation   = require("src.animation")
 local scene       = composer.newScene()
 
 -- -----------------------------------------------------------------------------------
@@ -123,6 +124,42 @@ local function gameLoop()
 end
 
 
+local function showCongratulations()
+  -- Create the text object for the congratulatory message
+  local congratsText = display.newText({
+    text = "Congratulations!",
+    x = display.contentCenterX,
+    y = display.contentCenterY,
+    font = "Arial",
+    fontSize = 80,
+    align = "center"
+  })
+  congratsText:setFillColor(1, 1, 0)
+
+  -- Scale up and fade in animation
+  congratsText.alpha = 0
+  congratsText:scale(0.5, 0.5)
+  transition.to(congratsText, { time = 500, alpha = 1, xScale = 1, yScale = 1, transition = easing.outQuad })
+
+  -- Delayed removal of the text object
+  timer.performWithDelay(2000, function()
+    transition.to(congratsText,
+      {
+        time = 500,
+        alpha = 0,
+        xScale = 0.5,
+        yScale = 0.5,
+        transition = easing.inQuad,
+        onComplete = function()
+          display.remove(congratsText)
+        end
+      })
+  end)
+end
+
+-- Call the function to trigger the congratulatory animation
+
+
 local function onCollision(event)
   local obj1 = event.object1
   local obj2 = event.object2
@@ -147,7 +184,11 @@ local function onCollision(event)
       ballText.text = const.lesson.getTargetText(const.i)
 
       -- remove the box
-      display.remove(obj1)
+
+      animation.animateObject(obj1)
+      showCongratulations()
+
+      local time = 3000
 
       -- Ball
       ball1.platformTouched = false
@@ -155,27 +196,30 @@ local function onCollision(event)
       ball1.alpha = 0
 
       -- Additional screen for A for Apple
-      word = display.newText({
-        text = const.lesson.getTargetWord(const.i),
-        x = display.contentCenterX,
-        y = display.contentCenterX,
-        font = native.systemFont,
-        fontSize = const.fontSize,
-        align = "center"
-      })
 
-      timer.performWithDelay(1000, function()
-        display.remove(word)
-      end
-      )
-      if const.i < 4 then
-        timer.performWithDelay(2000, function()
-          animateText(ballText)({ phase = "ended" })
-        end)
-        timer.performWithDelay(4000, function()
-          ball.startingPhaseBall(ball1)
-        end)
-      end
+
+      timer.performWithDelay(2000, function()
+        word = display.newText({
+          text = const.lesson.getTargetWord(const.i),
+          x = display.contentCenterX,
+          y = display.contentCenterX,
+          font = native.systemFont,
+          fontSize = const.fontSize,
+          align = "center"
+        })
+        timer.performWithDelay(1000, function()
+          display.remove(word)
+        end
+        )
+        if const.i < 4 then
+          timer.performWithDelay(2000, function()
+            animateText(ballText)({ phase = "ended" })
+          end)
+          timer.performWithDelay(4000, function()
+            ball.startingPhaseBall(ball1)
+          end)
+        end
+      end)
     elseif (obj1.myName == "platform" and obj2.myName == "ball") then
       ball1.platformTouched = true
       ball1.onPlatform = false
@@ -264,7 +308,7 @@ function scene:create(event)
   sceneGroup:insert(rightBoundary)
 
   -- Collision and EventListener
-  ball1:addEventListener("tap", ball.createOnTouch(ball1))
+  ball1:addEventListener("touch", ball.createOnTouch(ball1))
   ballText:addEventListener("tap", animateText(ballText))
 
 

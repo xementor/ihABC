@@ -6,6 +6,7 @@
 		"native",
 		"transition",
 		"Runtime",
-		"system"
+		"system",
+		"easing"
 	]
 }
