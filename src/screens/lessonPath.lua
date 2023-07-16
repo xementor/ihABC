@@ -1,7 +1,6 @@
 local composer        = require("composer")
 local const           = require("src.const")
 local state           = require("src.data.state")
-
 local scene           = composer.newScene()
 
 -- -----------------------------------------------------------------------------------
@@ -16,34 +15,30 @@ local levelData
 
 
 
+
+local isScrolling = false -- Variable to track scrolling state
+
 local function lessonTapped(event)
-  -- logic for deciding that is not scroling
-  local phase = event.phase
-  local y = event.y
+  if isScrolling then return true end
 
-  local isMoved = false
+  local lesson = event.target.lesson
+  if lesson.index > levelData.currentLevel then return end
 
-  if phase == "began" then
-  elseif phase == "moved" then
-    isMoved = true
-  elseif phase == "ended" and not isMoved then
-    print("ended", y)
-    local lesson = event.target.lesson
-    if lesson.index > levelData.currentLevel then return end
-    -- Implement the logic to navigate to the corresponding lesson here
-    local options = {
-      effect = "fade",
-      time = 500,
-      params = {
-        lesson = lesson
-      }
+  -- Implement the logic to navigate to the corresponding lesson here
+  local options = {
+    effect = "fade",
+    time = 500,
+    params = {
+      lesson = lesson
     }
+  }
+  composer.removeScene("src.screens.lessonPath")
+  composer.gotoScene("src.screens.lesson", options)
 
-    composer.removeScene("src.screens.lessonPath")
-    composer.gotoScene("src.screens.lesson", options)
-    isMoved = false
-  end
+  return true
 end
+
+
 
 local function onBackButtonPressed(event)
   composer.gotoScene("src.screens.menu", {
@@ -51,6 +46,10 @@ local function onBackButtonPressed(event)
     time = 500,
   })
 end
+
+
+
+
 
 local function createLessonTrack(pathString)
   local group = display.newGroup()
@@ -100,7 +99,7 @@ local function createLessonTrack(pathString)
       align    = "center",
     })
     lessonText.y = lessonText.y + lessonText.height / 2 - (fontSize / 2)
-    group:addEventListener("touch", lessonTapped)
+    group:addEventListener("tap", lessonTapped)
     group.lesson = lesson
     return group
   end
@@ -172,23 +171,36 @@ function scene:create(event)
   backButton.width = buttonSize
   backButton.height = buttonSize
 
-  backButton:addEventListener("touch", onBackButtonPressed)
+  backButton:addEventListener("tap", onBackButtonPressed)
 
 
 
 
 
 
-  local function scrollListener(event1)
-    local phase = event1.phase
-    local y = event1.y
+  local function scrollListener(event)
+    local phase = event.phase
 
     if phase == "began" then
-      scrollView.yStart = y
-    elseif phase == "moved" then
-      local dy = y - scrollView.yStart
-      scrollView.y = scrollView.y + dy
-      scrollView.yStart = y
+      display.currentStage:setFocus(event.target)
+      scrollView.isFocus = true
+
+      -- Store initial position
+      scrollView.startY = event.y
+    elseif scrollView.isFocus then
+      if phase == "moved" then
+        -- Calculate the distance moved only along the Y-axis
+        local deltaY = event.y - scrollView.startY
+
+        -- Scroll the display group along the Y-axis
+        scrollView.y = scrollView.y + deltaY
+
+        -- Update the initial position for the next move event
+        scrollView.startY = event.y
+      elseif phase == "ended" or phase == "cancelled" then
+        display.currentStage:setFocus(nil)
+        scrollView.isFocus = false
+      end
     end
 
     return true

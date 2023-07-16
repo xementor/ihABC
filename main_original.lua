@@ -108,7 +108,7 @@ physics.addBody(ball1, "dynamic", { bounce = 0.3 })
 
 -- Collision and EventListener
 ball1:addEventListener("touch", ball.createOnTouch(ball1))
-ballText:addEventListener("touch", animateText(ballText))
+ballText:addEventListener("tap", animateText(ballText))
 Runtime:addEventListener("collision", collisionHandler.onCollision)
 
 

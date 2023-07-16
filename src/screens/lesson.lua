@@ -248,7 +248,7 @@ function scene:create(event)
   backButton.y = verticalGap + display.screenOriginY + (buttonSize * .5)
   backButton.width = buttonSize
   backButton.height = buttonSize
-  backButton:addEventListener("touch", gotoLessonPath)
+  backButton:addEventListener("tap", gotoLessonPath)
 
   -- backButton:addEventListener("touch", onBackButtonPressed)
 
@@ -264,8 +264,8 @@ function scene:create(event)
   sceneGroup:insert(rightBoundary)
 
   -- Collision and EventListener
-  ball1:addEventListener("touch", ball.createOnTouch(ball1))
-  ballText:addEventListener("touch", animateText(ballText))
+  ball1:addEventListener("tap", ball.createOnTouch(ball1))
+  ballText:addEventListener("tap", animateText(ballText))
 
 
   physics.addBody(platform, "static")
