@@ -17,9 +17,11 @@
 - [x] fix: touching two box at the same time
 - [x] fix: grouping problem
 
-- [] change speakButton
-- [] in lessonPath add start and finish line
-- [] add select sound
-- [] add lesson2 touch animation
+- [x] change speakButton
+- [x] in lessonPath add start and finish line
+- [x] add select sound
+- [x] add lesson2 touch animation
+
+- fix ballText animation, wait to chnage the text
 
 if there would be a visual editor like godot it will be very helpfull poitioning stuff in screen

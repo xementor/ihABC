@@ -12,6 +12,9 @@ local animation       = require "src.animation"
 local startY          = display.contentHeight - 100
 local containerHeight = 250
 local lessonGap       = containerHeight + 50
+local variant2Color   = { 255 / 255, 98 / 255, 10 / 255 }
+local variant3Color   = { 37 / 255, 37 / 255, 37 / 255 }
+local variant1Color   = { 117 / 255, 160 / 255, 200 / 255 }
 
 local levelData
 local numLesson
@@ -91,11 +94,11 @@ local function createLessonTrack(pathString)
       containerHeight, 25)
 
     if (variant == 2) then
-      container:setFillColor(255 / 255, 98 / 255, 10 / 255)
+      container:setFillColor(unpack(variant2Color))
     elseif (variant == 3) then
-      container:setFillColor(37 / 255, 37 / 255, 37 / 255)
+      container:setFillColor(unpack(variant3Color))
     else
-      container:setFillColor(117 / 255, 160 / 255, 200 / 255)
+      container:setFillColor(unpack(variant1Color))
     end
 
     local fontSize = 120
@@ -115,6 +118,7 @@ local function createLessonTrack(pathString)
     group.lesson = lesson
     return group
   end
+
 
   for i = 1, numLesson do
     local y = startY - ((i - 1) * lessonGap)
@@ -139,6 +143,35 @@ local function createLessonTrack(pathString)
     group:insert(lesson)
   end
 
+  local endY = display.contentHeight - (numLesson - levelData.currentLevel) * lessonGap - (2 * lessonGap)
+  local lessonEnd = display.newRect(
+    group, display.contentCenterX, endY, display.contentWidth, 400)
+  local textEnd = display.newText({
+    parent = group,
+    text = "Finished",
+    x = display.contentCenterX,
+    y = endY + 100,
+    font = native.systemFontBold,
+    fontSize = 50,
+    align = "center"
+  }
+  )
+  lessonEnd:setFillColor(unpack(variant1Color))
+
+  local startY = display.contentHeight + (levelData.currentLevel * lessonGap)
+  local lessonStart = display.newRect(
+    group, display.contentCenterX, startY, display.contentWidth, 400)
+  local text = display.newText({
+    parent = group,
+    text = "Start here",
+    x = display.contentCenterX,
+    y = startY - 100,
+    font = native.systemFontBold,
+    fontSize = 50,
+    align = "center"
+  }
+  )
+  lessonStart:setFillColor(unpack(variant3Color))
 
   return group
 end
@@ -166,6 +199,7 @@ function scene:create(event)
   background.y = display.contentCenterY
 
 
+
   local lessonTrack = createLessonTrack(path)
 
 
@@ -173,11 +207,16 @@ function scene:create(event)
   scrollView:insert(lessonTrack)
   sceneGroup:insert(scrollView)
 
+  -- top black box
+  local top = display.newRect(sceneGroup,
+    display.contentCenterX, display.screenOriginY, display.contentWidth, 150)
+  top:setFillColor(0)
+
   -- navigations icon
   local backButton = display.newImage(sceneGroup, "images/backIcon.png")
-  local buttonSize = 100
+  local buttonSize = 120
   local horizontalGap = 50
-  local verticalGap = 10
+  local verticalGap = 5
   backButton.x = horizontalGap + (buttonSize * .5)
   backButton.y = verticalGap + display.screenOriginY + (buttonSize * .5)
   backButton.width = buttonSize
