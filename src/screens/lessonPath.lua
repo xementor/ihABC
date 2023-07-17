@@ -3,6 +3,8 @@ local const           = require("src.const")
 local state           = require("src.data.state")
 local scene           = composer.newScene()
 
+local animation       = require "src.animation"
+
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
@@ -32,8 +34,13 @@ local function lessonTapped(event)
       lesson = lesson
     }
   }
-  composer.removeScene("src.screens.lessonPath")
-  composer.gotoScene("src.screens.lesson", options)
+
+  local function rest()
+    composer.removeScene("src.screens.lessonPath")
+    composer.gotoScene("src.screens.lesson", options)
+  end
+
+  animation.buttonAnimation(event.target, rest)
 
   return true
 end
@@ -41,11 +48,15 @@ end
 
 
 local function onBackButtonPressed(event)
-  composer.removeScene("src.screens.lessonPath")
-  composer.gotoScene("src.screens.menu", {
-    effect = "slideRight",
-    time = 500,
-  })
+  local function extra()
+    composer.removeScene("src.screens.lessonPath")
+    composer.gotoScene("src.screens.menu", {
+      effect = "slideRight",
+      time = 500,
+    })
+  end
+  local button = event.target
+  animation.buttonAnimation(button, extra)
 end
 
 

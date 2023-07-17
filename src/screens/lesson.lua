@@ -31,17 +31,25 @@ local function gotoLessonPath(event)
       extraData = { path = path }
     }
   }
-  isRunning = false
-  -- display.remove(ball1)
-  composer.removeScene("src.screens.lesson")
-  composer.gotoScene("src.screens.lessonPath", options)
+  local button = event.target
+  local function rest()
+    isRunning = false
+    -- display.remove(ball1)
+    composer.removeScene("src.screens.lesson")
+    composer.gotoScene("src.screens.lessonPath", options)
+  end
+  animation.buttonAnimation(button, rest)
 end
+
+
+
 
 local function gotoLesson2(event)
   local options = {
     params = lesson
   }
   -- display.remove(ball1)
+
   composer.removeScene("src.screens.lesson")
   composer.gotoScene("src.screens.lesson2", options)
 end

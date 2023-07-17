@@ -11,10 +11,15 @@
 
 - [x] box Text should disappear
 
-- [ ] on collition with box
-- [ ] if wrong ball is selection , add warning sound and say that it is this word and add command
-- [ ] for right ball selected, make this word stand out and sound the word
-- [ ] fix: touching two box at the same time
-- [ ] fix: grouping problem
+- [x] on collition with box
+- [x] if wrong ball is selection , add warning sound and say that it is this word and add command
+- [x] for right ball selected, make this word stand out and sound the word
+- [x] fix: touching two box at the same time
+- [x] fix: grouping problem
+
+- [] change speakButton
+- [] in lessonPath add start and finish line
+- [] add select sound
+- [] add lesson2 touch animation
 
 if there would be a visual editor like godot it will be very helpfull poitioning stuff in screen

@@ -1,5 +1,6 @@
 local composer = require("composer")
 local const = require "src.const"
+local animation = require "src.animation"
 
 local scene = composer.newScene()
 
@@ -19,7 +20,12 @@ local function lessonTapped(event)
       extraData = { path = pathName }
     }
   }
-  composer.gotoScene("src.screens.lessonPath", options)
+
+  local function rest()
+    composer.gotoScene("src.screens.lessonPath", options)
+  end
+
+  animation.buttonAnimation(event.target, rest)
 end
 
 -- -----------------------------------------------------------------------------------

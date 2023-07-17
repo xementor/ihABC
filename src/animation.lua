@@ -32,5 +32,24 @@ function M.animateObject(object)
   })
 end
 
+function M.buttonAnimation(button, func)
+  transition.cancel(button) -- Cancel any ongoing transitions on the button
+  transition.to(button, {
+    time = 100,
+    xScale = 0.9,
+    yScale = 0.9,
+    transition = easing.outQuad,
+    onComplete = function()
+      transition.to(button, {
+        time = 100,
+        xScale = 1,
+        yScale = 1,
+        transition = easing.outQuad,
+        onComplete = func
+      })
+    end
+  })
+end
+
 -- Call the function to animate the object
 return M

@@ -1,9 +1,10 @@
-local composer = require("composer")
-local const    = require("src.const")
-local boxes    = require("src.boxes")
-local state    = require("src.data.state")
+local composer  = require("composer")
+local const     = require("src.const")
+local boxes     = require("src.boxes")
+local state     = require("src.data.state")
+local animation = require("src.animation")
 
-local scene    = composer.newScene()
+local scene     = composer.newScene()
 
 
 -- -----------------------------------------------------------------------------------
@@ -37,6 +38,7 @@ end
 local function alphabetTapped(event)
   local alphabet = event.target.alphabet
   local focuesAlphabet = getFocusAlhabets()
+  local el = event.target
 
   if alphabet == focuesAlphabet then
     if not alphaCount[alphabet] then
@@ -51,10 +53,35 @@ local function alphabetTapped(event)
     alphaCount[alphabet] = alphaCount[alphabet] - 1
     -- remove the box
     audio.play(audio.loadSound("sounds/correct.mp3"))
-    display.remove(event.target)
+    transition.to(el, {
+      time = 500,
+      xScale = 2,
+      yScale = 2,
+      alpha = 0,
+      transition = easing.outQuad,
+      onComplete = function()
+        -- Remove the box from display after the animation completes
+        display.remove(el)
+      end
+    })
   else
     -- say outloudn that select the alpha
     -- this alpha na focus alpha select koro
+    transition.to(el, {
+      time = 100,
+      rotation = 20,
+      transition = easing.outQuad,
+      onComplete = function()
+        transition.to(el, {
+          time = 100,
+          rotation = -20,
+          transition = easing.outQuad,
+          onComplete = function()
+            transition.to(el, { time = 100, rotation = 0, transition = easing.outQuad })
+          end
+        })
+      end
+    })
     audio.play(audio.loadSound("sounds/hit.wav"))
     audio.play(audio.loadSound("sounds/" .. focuesAlphabet .. ".mp3"))
   end
@@ -96,9 +123,19 @@ local function generateGrid(content)
   return group
 end
 
-local function makeCommand()
+local function makeCommand(event)
   if (i > 3) then return true end
-  audio.play(audio.loadSound("sounds/" .. getFocusAlhabets() .. ".mp3"))
+
+  local function rest()
+    audio.play(audio.loadSound("sounds/" .. getFocusAlhabets() .. ".mp3"))
+  end
+
+  if not event then
+    rest()
+    return true
+  end
+
+  animation.buttonAnimation(event.target, rest)
 end
 
 -- Navigation
@@ -108,10 +145,17 @@ local function gotoLessonPath(event)
       extraData = { path = path }
     }
   }
-  isRunning = false
-  -- display.remove(ball1)
-  composer.removeScene("src.screens.lesson2")
-  composer.gotoScene("src.screens.lessonPath", options)
+  local function extra()
+    isRunning = false
+    -- display.remove(ball1)
+    composer.removeScene("src.screens.lesson2")
+    composer.gotoScene("src.screens.lessonPath", options)
+  end
+  if not event then
+    extra()
+    return
+  end
+  animation.buttonAnimation(event.target, extra)
 end
 
 
@@ -158,7 +202,7 @@ function scene:create(event)
 
   local x = display.contentCenterX
   local y = display.contentHeight
-  speakButton = createButton(sceneGroup, x, y)
+  speakButton = createButton(sceneGroup, x, y, "volume")
   speakButton:addEventListener("tap", makeCommand)
 
 
