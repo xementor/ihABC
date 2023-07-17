@@ -41,6 +41,7 @@ end
 
 
 local function onBackButtonPressed(event)
+  composer.removeScene("src.screens.lessonPath")
   composer.gotoScene("src.screens.menu", {
     effect = "slideRight",
     time = 500,
