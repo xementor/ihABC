@@ -14,6 +14,7 @@ local containerHeight = 250
 local lessonGap       = containerHeight + 50
 
 local levelData
+local numLesson
 
 
 
@@ -62,11 +63,10 @@ end
 
 
 
-
 local function createLessonTrack(pathString)
   local group = display.newGroup()
   local path = const.getPath(pathString)
-  local numLesson = #(path.lessons)
+  numLesson = #(path.lessons)
 
   local function addExtraSpace(str)
     local modifiedStr = ""
@@ -193,9 +193,18 @@ function scene:create(event)
   local function scrollListener(event)
     local phase = event.phase
 
+    local utils = require "src.utils"
+
+    local index = levelData.currentLevel
+    local startY = 0 - ((index - 1) * lessonGap)
+
+    local endY = (numLesson - index - 2) * lessonGap
+
+
     if phase == "began" then
       display.currentStage:setFocus(event.target)
       scrollView.isFocus = true
+      print("scrollView y", scrollView.y, startY)
 
       -- Store initial position
       scrollView.startY = event.y
@@ -204,8 +213,18 @@ function scene:create(event)
         -- Calculate the distance moved only along the Y-axis
         local deltaY = event.y - scrollView.startY
 
-        -- Scroll the display group along the Y-axis
+
+        if scrollView.y <= startY then
+          scrollView.y = startY
+        end
+
+
+        if scrollView.y > endY then
+          scrollView.y = endY
+        end
+
         scrollView.y = scrollView.y + deltaY
+
 
         -- Update the initial position for the next move event
         scrollView.startY = event.y

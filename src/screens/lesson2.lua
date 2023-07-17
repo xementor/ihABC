@@ -18,7 +18,7 @@ local oldI = 1
 local alphaCount
 local speakButton, grid, backButton
 local path, lessonNo
-local gameLoopTime
+local gameLoopTimer
 local isRunning = false
 local buttonSize = 100
 
@@ -32,7 +32,14 @@ end
 
 
 local function getFocusAlhabets()
-  return lessonAlphabets[i]
+  -- if first element not in lessonAlphabets
+  if (i == 1) then
+    if alphaCount[1] == 0 then
+      i = i + 1
+    end
+  end
+  local focused = lessonAlphabets[i]
+  if focused then return focused end
 end
 
 local function alphabetTapped(event)
@@ -126,8 +133,11 @@ end
 local function makeCommand(event)
   if (i > 3) then return true end
 
+  local focues = getFocusAlhabets()
+  if not focues then return true end
+
   local function rest()
-    audio.play(audio.loadSound("sounds/" .. getFocusAlhabets() .. ".mp3"))
+    audio.play(audio.loadSound("sounds/" .. focues .. ".mp3"))
   end
 
   if not event then
