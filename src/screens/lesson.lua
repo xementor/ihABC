@@ -17,7 +17,7 @@ physics.start()
 
 -- global variable
 local gameLoopTimer
-local lessonNo
+local lessonNo, lesson
 local path
 local isRunning = false
 local platform, leftBoundary, rightBoundary, box1, box2, box3, ball1, ballText, backButton, background
@@ -36,6 +36,16 @@ local function gotoLessonPath(event)
   composer.removeScene("src.screens.lesson")
   composer.gotoScene("src.screens.lessonPath", options)
 end
+
+local function gotoLesson2(event)
+  local options = {
+    params = lesson
+  }
+  -- display.remove(ball1)
+  composer.removeScene("src.screens.lesson")
+  composer.gotoScene("src.screens.lesson2", options)
+end
+
 
 -- Sound
 local function readAlphabet(ch)
@@ -110,7 +120,7 @@ local function gameLoop()
 
     if not isRunning then
       isRunning = true
-      timer.performWithDelay(3000, function() gotoLessonPath() end)
+      timer.performWithDelay(3000, function() gotoLesson2() end)
     end
   elseif ball1.x then
     if (ball1.x < -10 or
@@ -239,7 +249,7 @@ end
 function scene:create(event)
   local sceneGroup = self.view
 
-  local lesson = event.params.lesson
+  lesson = event.params.lesson
   local content = lesson.content
   lessonNo = lesson.index
   path = lesson.path
@@ -258,21 +268,20 @@ function scene:create(event)
   background.y = display.contentCenterY
 
   box1 = boxesModule.createBox(
-    const.boxPositionX, const.boxPositionY, const.lesson.ballText[1], { 1, 0, 0 }
+    const.boxPositionX, const.boxPositionY, const.lesson.ballText[1]
   )
 
 
   box2 = boxesModule.createBox(
     const.boxPositionX + const.boxSize + const.boxGap,
-    const.boxPositionY, const.lesson.ballText[2],
-    { 0, 1, 0 }
+    const.boxPositionY, const.lesson.ballText[2]
+
   )
 
   box3 = boxesModule.createBox(
     const.boxPositionX + const.boxSize + 2 * const.boxGap + const.boxSize,
     const.boxPositionY,
-    const.lesson.ballText[3],
-    { 0, 0, 1 }
+    const.lesson.ballText[3]
   )
 
   platform = barrier.createPlatform()

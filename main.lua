@@ -1,5 +1,6 @@
 local composer = require("composer")
-local const    = require("src.const")
+local abc = require("src.data.ABC")
+
 
 -- Hide status bar
 display.setStatusBar(display.HiddenStatusBar)
@@ -9,13 +10,11 @@ math.randomseed(os.time())
 
 
 -- Go to the menu screen
-local abc     = require "src.data.ABC"
-local options = {
-  effect = "fade",
-  time = 500,
-
-  params = {
-    lesson = { content = abc.lessons[3] }
-  }
+-- composer.gotoScene("src.screens.menu")
+local lesson = {
+  title = "vongcong",
+  index = 3,
+  content = abc.lessons[3],
+  path = "ABC"
 }
-composer.gotoScene("src.screens.menu", options)
+composer.gotoScene("src.screens.lesson2", { params = lesson })

@@ -2,11 +2,13 @@ local const = require("src.const")
 
 local M = {}
 
-function M.createBox(x, y, text, color)
+function M.createBox(x, y, text, color, size)
+    if not color then color = { 255 / 255, 98 / 255, 10 / 255, .8 } end
+    if not size then size = const.boxSize end
     local boxGroup = display.newGroup()
-    local box = display.newRect(boxGroup, x, y, const.boxSize, const.boxSize)
+    local box = display.newRect(boxGroup, x, y, size, size)
     box.myName = text
-    box:setFillColor(255 / 255, 98 / 255, 10 / 255, .8)
+    box:setFillColor(unpack(color))
 
     local boxAlphabet = display.newText({
         parent = boxGroup,
