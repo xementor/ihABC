@@ -1,8 +1,9 @@
 local composer = require("composer")
-local const = require("src.const")
-local boxes = require("src.boxes")
+local const    = require("src.const")
+local boxes    = require("src.boxes")
+local state    = require("src.data.state")
 
-local scene = composer.newScene()
+local scene    = composer.newScene()
 
 
 -- -----------------------------------------------------------------------------------
@@ -12,8 +13,13 @@ local scene = composer.newScene()
 -- Set up constants
 local lessonAlphabets = {};
 local i = 1
+local oldI = 1
 local alphaCount
-local backButton
+local speakButton, grid, backButton
+local path, lessonNo
+local gameLoopTime
+local isRunning = false
+local buttonSize = 100
 
 local function generateAlphabetCount(lessonAlphabets)
   return {
@@ -44,10 +50,12 @@ local function alphabetTapped(event)
     end
     alphaCount[alphabet] = alphaCount[alphabet] - 1
     -- remove the box
+    audio.play(audio.loadSound("sounds/correct.mp3"))
     display.remove(event.target)
   else
     -- say outloudn that select the alpha
     -- this alpha na focus alpha select koro
+    audio.play(audio.loadSound("sounds/hit.wav"))
     audio.play(audio.loadSound("sounds/" .. focuesAlphabet .. ".mp3"))
   end
 end
@@ -89,16 +97,47 @@ local function generateGrid(content)
 end
 
 local function makeCommand()
+  if (i > 3) then return true end
   audio.play(audio.loadSound("sounds/" .. getFocusAlhabets() .. ".mp3"))
+end
+
+-- Navigation
+local function gotoLessonPath(event)
+  local options = {
+    params = {
+      extraData = { path = path }
+    }
+  }
+  isRunning = false
+  -- display.remove(ball1)
+  composer.removeScene("src.screens.lesson2")
+  composer.gotoScene("src.screens.lessonPath", options)
 end
 
 
 
-local gameLoopTimer
 local function gameLoop()
-  if (i > 3) then
-    print("end")
+  if (oldI ~= i and i <= 3) then
+    makeCommand()
+    oldI = i
   end
+  if (i > 3) then
+    state.updateLevel(path, lessonNo)
+    if not isRunning then
+      isRunning = true
+      gotoLessonPath()
+    end
+  end
+end
+
+local function createButton(sceneGroup, x, y, icon)
+  if not icon then icon = "crossIcon" end
+  local button = display.newImage(sceneGroup, "images/" .. icon .. ".png")
+  button.x = x
+  button.y = y
+  button.width = buttonSize
+  button.height = buttonSize
+  return button
 end
 
 -- -----------------------------------------------------------------------------------
@@ -111,17 +150,22 @@ function scene:create(event)
 
   local lesson = event.params
   lessonAlphabets = lesson.content.ballText
+  path = lesson.path
+  lessonNo = lesson.index
   alphaCount = generateAlphabetCount(lessonAlphabets);
 
-  local grid = generateGrid(lessonAlphabets)
+  grid = generateGrid(lessonAlphabets)
 
-  local buttonSize = 100
-  backButton = display.newImage(sceneGroup, "images/crossIcon.png")
-  backButton.x = display.contentCenterX
-  backButton.y = display.contentHeight
-  backButton:addEventListener("tap", makeCommand)
-  backButton.width = buttonSize
-  backButton.height = buttonSize
+  local x = display.contentCenterX
+  local y = display.contentHeight
+  speakButton = createButton(sceneGroup, x, y)
+  speakButton:addEventListener("tap", makeCommand)
+
+
+  x = buttonSize * .5
+  y = display.screenOriginY + x
+  backButton = createButton(sceneGroup, x, y)
+  backButton:addEventListener("tap", gotoLessonPath)
 
 
   sceneGroup:insert(grid)
@@ -136,6 +180,7 @@ function scene:show(event)
     -- Code here runs when the scene is still off screen (but is about to come on screen)
   elseif (phase == "did") then
     -- Code here runs when the scene is entirely on screen
+    makeCommand()
     gameLoopTimer = timer.performWithDelay(500, gameLoop, 0)
   end
 end
@@ -156,6 +201,9 @@ end
 function scene:destroy(event)
   local sceneGroup = self.view
   -- Code here runs prior to the removal of scene's view
+  display.remove(grid)
+  display.remove(speakButton)
+  display.remove(backButton)
   timer.cancel(gameLoopTimer)
 end
 

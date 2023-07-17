@@ -115,7 +115,7 @@ local function gameLoop()
     -- local gameEnd = display.newText(group, "Game End", display.contentCenterX, display.contentCenterY)
     -- group.removed(gameEnd)
     -- gameEnd.fontSize = 100
-    state.updateLevel(path, lessonNo)
+    -- state.updateLevel(path, lessonNo)
     ball1.alpha = 0
 
     if not isRunning then
