@@ -32,7 +32,9 @@ end
 
 
 local function getFocusAlhabets()
-  if alphaCount[i] == 0 then i = i + 1 end
+  if i > 3 then return end
+  local focusAlphaCount = alphaCount[lessonAlphabets[i]]
+  if focusAlphaCount < 1 then i = i + 1 end
   local focused = lessonAlphabets[i]
   if focused then return focused end
 end
@@ -46,15 +48,6 @@ local function alphabetTapped(event)
   local el = event.target
 
   if alphabet == focuesAlphabet then
-    if not alphaCount[alphabet] then
-      i = i + 1
-      return true
-    end
-    if alphaCount[alphabet] < 2 then
-      -- change focus Alphabet
-      i = i + 1
-      -- consider end case
-    end
     alphaCount[alphabet] = alphaCount[alphabet] - 1
     -- remove the box
     audio.play(audio.loadSound("sounds/correct.mp3"))
@@ -136,7 +129,6 @@ local function makeCommand(event)
 
   local focues = getFocusAlhabets()
   if not focues then
-    i = i + 1
     return true
   end
 

@@ -19,6 +19,8 @@ local variant1Color   = { 117 / 255, 160 / 255, 200 / 255 }
 local levelData
 local numLesson
 local currentLesson
+local path
+local lessonTrack
 
 
 
@@ -41,7 +43,7 @@ local function lessonTapped(event)
   }
 
   local function rest()
-    composer.removeScene("src.screens.lessonPath")
+    -- composer.removeScene("src.screens.lessonPath")
     composer.gotoScene("src.screens.lesson", options)
   end
 
@@ -191,7 +193,7 @@ function scene:create(event)
   -- Code here runs when the scene is first created but has not yet appeared on screen
 
   -- extraData
-  local path = event.params.extraData.path
+  path = event.params.extraData.path
   local haveUpdate = event.params.extraData.haveUpdate
 
   levelData = state.getData(path)
@@ -203,7 +205,7 @@ function scene:create(event)
 
 
 
-  local lessonTrack = createLessonTrack(path)
+  lessonTrack = createLessonTrack(path)
 
 
 
@@ -288,11 +290,39 @@ function scene:show(event)
   local sceneGroup = self.view
   local phase = event.phase
 
+  print("show")
+
   if (phase == "will") then
     -- Code here runs when the scene is still off screen (but is about to come on screen)
+    levelData = state.getData(path)
   elseif (phase == "did") then
+    if (levelData.currentLevel < 2) then return true end
     -- Code here runs when the scene is entirely on screen
     local animation = require "src.animation"
+    local prevLesson = lessonTrack[levelData.currentLevel - 1]
+    local curLesson = lessonTrack[levelData.currentLevel]
+    -- curLesson[1]:setFillColor(unpack(variant1Color))
+    prevLesson[1]:setFillColor(unpack(variant2Color))
+
+    local transitionTime = 1000           -- Transition duration in milliseconds
+    local easingFunction = easing.outQuad -- Easing function for the transition
+
+    transition.to(curLesson[1], {
+      r = variant1Color[1],
+      g = variant1Color[2],
+      b = variant1Color[3],
+      time = transitionTime,
+      transition = easingFunction
+    })
+
+    -- transition.to(prevLesson[1], {
+    --   r = variant2Color[1],
+    --   g = variant2Color[2],
+    --   b = variant2Color[3],
+    --   time = transitionTime,
+    --   transition = easingFunction
+    -- })
+
     -- animation.buttonAnimation(currentLesson)
   end
 end
@@ -301,6 +331,8 @@ end
 function scene:hide(event)
   local sceneGroup = self.view
   local phase = event.phase
+
+  print("hide")
 
   if (phase == "will") then
     -- Code here runs when the scene is on screen (but is about to go off screen)
@@ -313,6 +345,7 @@ end
 function scene:destroy(event)
   local sceneGroup = self.view
   -- Code here runs prior to the removal of scene's view
+  print("destroy")
 end
 
 -- -----------------------------------------------------------------------------------
