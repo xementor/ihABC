@@ -18,6 +18,7 @@ local variant1Color   = { 117 / 255, 160 / 255, 200 / 255 }
 
 local levelData
 local numLesson
+local currentLesson
 
 
 
@@ -137,6 +138,7 @@ local function createLessonTrack(pathString)
       lesson = makeLessons(containerY, i, 2)
     elseif i == levelData.currentLevel then
       lesson = makeLessons(containerY, i)
+      currentLesson = lesson
     else
       lesson = makeLessons(containerY, i, 3)
     end
@@ -190,6 +192,7 @@ function scene:create(event)
 
   -- extraData
   local path = event.params.extraData.path
+  local haveUpdate = event.params.extraData.haveUpdate
 
   levelData = state.getData(path)
 
@@ -201,6 +204,7 @@ function scene:create(event)
 
 
   local lessonTrack = createLessonTrack(path)
+
 
 
   local scrollView = display.newGroup()
@@ -288,6 +292,8 @@ function scene:show(event)
     -- Code here runs when the scene is still off screen (but is about to come on screen)
   elseif (phase == "did") then
     -- Code here runs when the scene is entirely on screen
+    local animation = require "src.animation"
+    -- animation.buttonAnimation(currentLesson)
   end
 end
 

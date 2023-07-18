@@ -32,17 +32,15 @@ end
 
 
 local function getFocusAlhabets()
-  -- if first element not in lessonAlphabets
-  if (i == 1) then
-    if alphaCount[1] == 0 then
-      i = i + 1
-    end
-  end
+  if alphaCount[i] == 0 then i = i + 1 end
   local focused = lessonAlphabets[i]
   if focused then return focused end
 end
 
+local tapRunning = false
 local function alphabetTapped(event)
+  if tapRunning then return true end
+  tapRunning = true
   local alphabet = event.target.alphabet
   local focuesAlphabet = getFocusAlhabets()
   local el = event.target
@@ -68,6 +66,7 @@ local function alphabetTapped(event)
       transition = easing.outQuad,
       onComplete = function()
         -- Remove the box from display after the animation completes
+        tapRunning = false
         display.remove(el)
       end
     })
@@ -85,12 +84,14 @@ local function alphabetTapped(event)
           transition = easing.outQuad,
           onComplete = function()
             transition.to(el, { time = 100, rotation = 0, transition = easing.outQuad })
+            if not focuesAlphabet then return true end
+            audio.play(audio.loadSound("sounds/hit.wav"))
+            audio.play(audio.loadSound("sounds/" .. focuesAlphabet .. ".mp3"))
+            tapRunning = false
           end
         })
       end
     })
-    audio.play(audio.loadSound("sounds/hit.wav"))
-    audio.play(audio.loadSound("sounds/" .. focuesAlphabet .. ".mp3"))
   end
 end
 
@@ -134,7 +135,10 @@ local function makeCommand(event)
   if (i > 3) then return true end
 
   local focues = getFocusAlhabets()
-  if not focues then return true end
+  if not focues then
+    i = i + 1
+    return true
+  end
 
   local function rest()
     audio.play(audio.loadSound("sounds/" .. focues .. ".mp3"))
@@ -151,8 +155,10 @@ end
 -- Navigation
 local function gotoLessonPath(event)
   local options = {
+    effect = "slideLeft",
+    time = 500,
     params = {
-      extraData = { path = path }
+      extraData = { path = path, haveUpdate = true }
     }
   }
   local function extra()

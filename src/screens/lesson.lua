@@ -23,6 +23,7 @@ local isRunning = false
 local platform, leftBoundary, rightBoundary, box1, box2, box3, ball1, ballText, backButton, background
 local word
 local explosionSound, eta, kickSound
+local group
 
 -- Navigation
 local function gotoLessonPath(event)
@@ -97,9 +98,10 @@ local function animateText(ballText)
       local firstDuartion = 500
       local second = 2000
       local thirdDuration = second
+      local wait = 10
       transition.scaleTo(ballText, { xScale = 2.5, yScale = 2.5, time = firstDuartion })
-      transition.scaleTo(ballText, { delay = firstDuartion, xScale = 2.4, yScale = 2.4, time = second })
-      transition.scaleTo(ballText, { delay = second, xScale = .5, yScale = .5 })
+      transition.scaleTo(ballText, { delay = firstDuartion + wait, xScale = 2.4, yScale = 2.4, time = second })
+      transition.scaleTo(ballText, { delay = second + wait * 2, xScale = 1, yScale = 1 })
 
       transition.to(ballText,
         {
@@ -108,7 +110,7 @@ local function animateText(ballText)
           x          = display.contentWidth / 2,
           y          = display.contentHeight + const.platformWidth / 2,
           onComplete = function()
-            ballText.isTouchable = true -- Reset flag when animation is complete
+            ballText.isTouchable = true
           end
         }
       )
@@ -141,11 +143,22 @@ local function gameLoop()
   end
 end
 
+local function createButton(sceneGroup, x, y, icon)
+  local buttonSize = 100
+  if not icon then icon = "crossIcon" end
+  local button = display.newImage(sceneGroup, "images/" .. icon .. ".png")
+  button.x = x
+  button.y = y
+  button.width = buttonSize
+  button.height = buttonSize
+  return button
+end
 
 local function showCongratulations()
   -- Create the text object for the congratulatory message
   local congratsText = display.newText({
-    text = "Congratulations!",
+    parent = group,
+    text = "Well Done",
     x = display.contentCenterX,
     y = display.contentCenterY,
     font = "Arial",
@@ -157,13 +170,13 @@ local function showCongratulations()
   -- Scale up and fade in animation
   congratsText.alpha = 0
   congratsText:scale(0.5, 0.5)
-  transition.to(congratsText, { time = 500, alpha = 1, xScale = 1, yScale = 1, transition = easing.outQuad })
+  transition.to(congratsText, { time = 100, alpha = 1, xScale = 1, yScale = 1, transition = easing.outQuad })
 
   -- Delayed removal of the text object
-  timer.performWithDelay(2000, function()
+  timer.performWithDelay(1000, function()
     transition.to(congratsText,
       {
-        time = 500,
+        time = 100,
         alpha = 0,
         xScale = 0.5,
         yScale = 0.5,
@@ -190,6 +203,8 @@ local function onCollision(event)
       audio.setVolume(0.2, { channel = 1 })
       audio.play(bounceSound, { channel = 1 })
     end
+
+    -- hit the correct box
     if (obj1.myName == const.lesson.getTargetText(const.i)
           and
           obj2.myName == "ball" and ball1.platformTouched
@@ -197,9 +212,8 @@ local function onCollision(event)
       -- correct sound
       audio.play(audio.loadSound("sounds/correct.mp3"))
 
-      -- change charecter
-      const.i       = const.i + 1
-      ballText.text = const.lesson.getTargetText(const.i)
+      -- change char index
+      const.i = const.i + 1
 
       -- remove the box
 
@@ -214,10 +228,9 @@ local function onCollision(event)
       ball1.alpha = 0
 
       -- Additional screen for A for Apple
-
-
       timer.performWithDelay(2000, function()
         word = display.newText({
+          parent = group,
           text = const.lesson.getTargetWord(const.i),
           x = display.contentCenterX,
           y = display.contentCenterX,
@@ -225,8 +238,9 @@ local function onCollision(event)
           fontSize = const.fontSize,
           align = "center"
         })
-        timer.performWithDelay(1000, function()
+        timer.performWithDelay(2000, function()
           display.remove(word)
+          ballText.text = const.lesson.getTargetText(const.i)
         end
         )
         if const.i < 4 then
@@ -249,6 +263,9 @@ local function onCollision(event)
   end
 end
 
+local function onClickspeakButton()
+  animateText(ballText)({ phase = "ended" })
+end
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -256,6 +273,7 @@ end
 -- create()
 function scene:create(event)
   local sceneGroup = self.view
+  group = sceneGroup
 
   lesson = event.params.lesson
   local content = lesson.content
@@ -311,7 +329,6 @@ function scene:create(event)
   backButton.height = buttonSize
   backButton:addEventListener("tap", gotoLessonPath)
 
-  -- backButton:addEventListener("touch", onBackButtonPressed)
 
   -- Add to screengroup
   sceneGroup:insert(box1.boxGroup)
@@ -323,6 +340,12 @@ function scene:create(event)
   sceneGroup:insert(ballText)
   sceneGroup:insert(leftBoundary)
   sceneGroup:insert(rightBoundary)
+
+  -- Navigation
+  local x = display.contentWidth - buttonSize
+  local y = display.contentHeight + const.platformWidth / 2
+  local speakButton = createButton(sceneGroup, x, y, "volume")
+  speakButton:addEventListener("tap", onClickspeakButton)
 
   -- Collision and EventListener
   ball1:addEventListener("touch", ball.createOnTouch(ball1))
@@ -374,8 +397,6 @@ end
 function scene:destroy(event)
   local sceneGroup = self.view
 
-  print("destroy called")
-
   timer.cancel(gameLoopTimer)
   const.i = 1
 
@@ -386,20 +407,18 @@ function scene:destroy(event)
   -- physics.removeBody(rightBoundary)
 
   timer.cancelAll()
-
   physics.pause()
   physics.stop()
-
   audio.stop()
 
 
-  if word then display.remove(word) end
+  -- if word then display.remove(word) end
 
-  display.remove(box1.box)
-  display.remove(box2.box)
-  display.remove(box3.box)
-  display.remove(ball1)
-  display.remove(ballText)
+  -- display.remove(box1.box)
+  -- display.remove(box2.box)
+  -- display.remove(box3.box)
+  -- display.remove(ball1)
+  -- display.remove(ballText)
   -- Code here runs prior to the removal of scene's view
 end
 

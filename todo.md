@@ -22,6 +22,10 @@
 - [x] add select sound
 - [x] add lesson2 touch animation
 
-- fix ballText animation, wait to chnage the text
+- [x] first time lesson not updating
+- [!] leson2, corrent focus word problem may be for animation
+- [x] fix ballText animation, wait to chnage the text
+- [] lessonPath jump current to next lesson
+- [] add photos of Apple
 
 if there would be a visual editor like godot it will be very helpfull poitioning stuff in screen
