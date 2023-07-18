@@ -24,6 +24,7 @@ local platform, leftBoundary, rightBoundary, box1, box2, box3, ball1, ballText, 
 local word
 local speakButton
 local group
+local ballStartY = const.ballYPosition
 
 -- Navigation
 local function gotoLessonPath(event)
@@ -139,7 +140,7 @@ local function gameLoop()
           ball1.y < -10 or
           ball1.y > display.contentHeight + 10)
     then
-      ball.startingPhaseBall(ball1)
+      ball.startingPhaseBall(ball1, ballStartY)
     end
   end
 end
@@ -249,7 +250,7 @@ local function onCollision(event)
             animateText(ballText)({ phase = "ended" })
           end)
           timer.performWithDelay(4000, function()
-            ball.startingPhaseBall(ball1)
+            ball.startingPhaseBall(ball1, ballStartY)
           end)
         end
       end)
@@ -293,6 +294,7 @@ function scene:create(event)
     display.contentHeight)
   background.x = display.contentCenterX
   background.y = display.contentCenterY
+
 
   box1 = boxesModule.createBox(
     const.boxPositionX, const.boxPositionY, const.lesson.ballText[1]

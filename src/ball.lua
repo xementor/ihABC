@@ -69,12 +69,12 @@ function M.createOnTouch(ball2)
   return onTouch
 end
 
-function M.startingPhaseBall(ball)
+function M.startingPhaseBall(ball, y)
   if ball == nil then return end
   ball.isVisiable = false
   ball.onPlatform = true
   ball.x = const.ballXPosition
-  ball.y = const.ballYPosition
+  ball.y = y
   ball.alpha = 0
   transition.to(ball, {
     alpha = 1,

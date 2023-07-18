@@ -15,7 +15,7 @@ M.boxPositionY       = 0
 -- ball
 M.ballRadius         = 50
 M.error              = 5
-M.ballYPosition      = display.contentHeight --display.contentHeight - M.error
+M.ballYPosition      = display.contentHeight - 150 --display.contentHeight - M.error
 M.ballXPosition      = display.contentCenterX
 M.platformWidth      = 100
 

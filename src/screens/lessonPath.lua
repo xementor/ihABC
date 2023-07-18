@@ -232,7 +232,8 @@ function scene:create(event)
 
 
 
-
+  local index
+  index = levelData.currentLevel
 
 
   local function scrollListener(event)
@@ -240,7 +241,6 @@ function scene:create(event)
 
     local utils = require "src.utils"
 
-    local index = levelData.currentLevel
     local startY = 0 - ((index - 1) * lessonGap)
 
     local endY = (numLesson - index - 2) * lessonGap
@@ -289,9 +289,9 @@ end
 function scene:show(event)
   local sceneGroup = self.view
   local phase = event.phase
-  haveUpdate = event.params.extraData.haveUpdate
   if (phase == "will") then
     -- Code here runs when the scene is still off screen (but is about to come on screen)
+    haveUpdate = event.params.extraData.haveUpdate
     levelData = state.getData(path)
   elseif (phase == "did") then
     if (levelData.currentLevel < 2) then return true end
