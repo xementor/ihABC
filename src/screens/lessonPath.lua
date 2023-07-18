@@ -21,6 +21,7 @@ local numLesson
 local currentLesson
 local path
 local lessonTrack
+local haveUpdate
 
 
 
@@ -194,7 +195,6 @@ function scene:create(event)
 
   -- extraData
   path = event.params.extraData.path
-  local haveUpdate = event.params.extraData.haveUpdate
 
   levelData = state.getData(path)
 
@@ -289,41 +289,21 @@ end
 function scene:show(event)
   local sceneGroup = self.view
   local phase = event.phase
-
-  print("show")
-
+  haveUpdate = event.params.extraData.haveUpdate
   if (phase == "will") then
     -- Code here runs when the scene is still off screen (but is about to come on screen)
     levelData = state.getData(path)
   elseif (phase == "did") then
     if (levelData.currentLevel < 2) then return true end
-    -- Code here runs when the scene is entirely on screen
-    local animation = require "src.animation"
-    local prevLesson = lessonTrack[levelData.currentLevel - 1]
-    local curLesson = lessonTrack[levelData.currentLevel]
-    -- curLesson[1]:setFillColor(unpack(variant1Color))
-    prevLesson[1]:setFillColor(unpack(variant2Color))
+    if haveUpdate then
+      if haveUpdate == true then
+        local prevLesson = lessonTrack[levelData.currentLevel - 1]
+        local curLesson = lessonTrack[levelData.currentLevel]
 
-    local transitionTime = 1000           -- Transition duration in milliseconds
-    local easingFunction = easing.outQuad -- Easing function for the transition
-
-    transition.to(curLesson[1], {
-      r = variant1Color[1],
-      g = variant1Color[2],
-      b = variant1Color[3],
-      time = transitionTime,
-      transition = easingFunction
-    })
-
-    -- transition.to(prevLesson[1], {
-    --   r = variant2Color[1],
-    --   g = variant2Color[2],
-    --   b = variant2Color[3],
-    --   time = transitionTime,
-    --   transition = easingFunction
-    -- })
-
-    -- animation.buttonAnimation(currentLesson)
+        animation.animateColor(curLesson[1], variant3Color, variant1Color)
+        animation.animateColor(prevLesson[1], variant1Color, variant2Color)
+      end
+    end
   end
 end
 
@@ -332,7 +312,6 @@ function scene:hide(event)
   local sceneGroup = self.view
   local phase = event.phase
 
-  print("hide")
 
   if (phase == "will") then
     -- Code here runs when the scene is on screen (but is about to go off screen)

@@ -21,6 +21,7 @@ local path, lessonNo
 local gameLoopTimer
 local isRunning = false
 local buttonSize = 100
+local levelData
 
 local function generateAlphabetCount(lessonAlphabets)
   return {
@@ -146,11 +147,17 @@ end
 
 -- Navigation
 local function gotoLessonPath(event)
+  local haveUpdate
+  if lessonNo < levelData.currentLevel then
+    haveUpdate = false
+  else
+    haveUpdate = true
+  end
   local options = {
     effect = "slideLeft",
     time = 500,
     params = {
-      extraData = { path = path, haveUpdate = true }
+      extraData = { path = path, haveUpdate = haveUpdate }
     }
   }
   local function extra()
@@ -169,6 +176,9 @@ end
 
 
 local function gameLoop()
+  -- auto increment index and change page
+  getFocusAlhabets()
+
   if (oldI ~= i and i <= 3) then
     makeCommand()
     oldI = i
@@ -200,11 +210,13 @@ end
 function scene:create(event)
   local sceneGroup = self.view
 
+
   local lesson = event.params
   lessonAlphabets = lesson.content.ballText
   path = lesson.path
   lessonNo = lesson.index
   alphaCount = generateAlphabetCount(lessonAlphabets);
+  levelData = state.getData(path)
 
   grid = generateGrid(lessonAlphabets)
 

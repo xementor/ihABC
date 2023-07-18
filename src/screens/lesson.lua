@@ -22,7 +22,7 @@ local path
 local isRunning = false
 local platform, leftBoundary, rightBoundary, box1, box2, box3, ball1, ballText, backButton, background
 local word
-local explosionSound, eta, kickSound
+local speakButton
 local group
 
 -- Navigation
@@ -105,7 +105,7 @@ local function animateText(ballText)
 
       transition.to(ballText,
         {
-          delay      = thirdDuration,
+          delay      = thirdDuration + 3 * wait,
           time       = 500,
           x          = display.contentWidth / 2,
           y          = display.contentHeight + const.platformWidth / 2,
@@ -127,6 +127,7 @@ local function gameLoop()
     -- gameEnd.fontSize = 100
     -- state.updateLevel(path, lessonNo)
     ball1.alpha = 0
+    speakButton.alpha = 0
 
     if not isRunning then
       isRunning = true
@@ -344,7 +345,7 @@ function scene:create(event)
   -- Navigation
   local x = display.contentWidth - buttonSize
   local y = display.contentHeight + const.platformWidth / 2
-  local speakButton = createButton(sceneGroup, x, y, "volume")
+  speakButton = createButton(sceneGroup, x, y, "volume")
   speakButton:addEventListener("tap", onClickspeakButton)
 
   -- Collision and EventListener

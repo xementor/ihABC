@@ -51,5 +51,31 @@ function M.buttonAnimation(button, func)
   })
 end
 
+function M.animateColor(obj, currentColor, targetColor)
+  local transitionTime = 500                  -- Transition duration in milliseconds
+  local steps = 10                            -- Number of steps in the animation
+  local stepDuration = transitionTime / steps -- Duration of each step in milliseconds
+  local colorStep = {}
+  for i = 1, 3 do
+    colorStep[i] = (targetColor[i] - currentColor[i]) / steps
+  end
+
+  local step = 0
+  local function updateColor()
+    step = step + 1
+
+    for i = 1, 3 do
+      currentColor[i] = currentColor[i] + colorStep[i]
+    end
+
+    obj:setFillColor(unpack(currentColor))
+
+    if step < steps then
+      timer.performWithDelay(stepDuration, updateColor)
+    end
+  end
+  updateColor()
+end
+
 -- Call the function to animate the object
 return M

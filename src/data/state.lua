@@ -102,8 +102,7 @@ function M.updateLevel(path, i)
     levelData.finishLevel = i
   else
     levelData = M.generateLevelTable(1, 2)
-    t[path] = levelData
-    allData = t
+    allData[path] = levelData
   end
 
   M.saveTable(allData, "data")
