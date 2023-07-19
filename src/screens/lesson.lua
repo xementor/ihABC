@@ -359,6 +359,7 @@ function scene:create(event)
     const.lesson.ballText[3]
   )
 
+
   platform = barrier.createPlatform()
   ball1 = ball.createBall()
   ball1.alpha = 0

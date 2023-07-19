@@ -88,5 +88,76 @@ function M.scaleObject(ob, func)
   })
 end
 
+function M.moveBoxes(box1, box2, box3)
+  -- Move and animate box1 (from left)
+  transition.to(box1, { delay = 500, time = 1000, x = box1.iX, xScale = .5, yScale = .5, transition = easing.outQuad })
+  transition.to(box1, { delay = 1500, time = 500, alpha = 0.7, xScale = 1.2, yScale = 1.2, transition = easing.outQuad })
+  transition.to(box1, { delay = 2000, time = 500, alpha = 1, xScale = 1, yScale = 1, transition = easing.outQuad })
+
+  -- Move and animate box2 (from top)
+  transition.to(box2, { delay = 500, time = 1000, y = box2.iY, xScale = .5, yScale = .5, transition = easing.outQuad })
+  transition.to(box2, { delay = 1500, time = 500, alpha = 0.7, xScale = 1.2, yScale = 1.2, transition = easing.outQuad })
+  transition.to(box2, { delay = 2000, time = 500, alpha = 1, xScale = 1, yScale = 1, transition = easing.outQuad })
+
+  -- Move and animate box3 (from right)
+  transition.to(box3, { delay = 500, time = 1000, x = box3.iX, xScale = .5, yScale = .5, transition = easing.outQuad })
+  transition.to(box3, { delay = 1500, time = 500, alpha = 0.7, xScale = 1.2, yScale = 1.2, transition = easing.outQuad })
+  transition.to(box3, { delay = 2000, time = 500, alpha = 1, xScale = 1, yScale = 1, transition = easing.outQuad })
+end
+
+function M.animateScale(obj)
+  transition.scaleTo(obj, { xScale = 0.5, yScale = 0.5, time = 200, transition = easing.outQuad })
+  transition.scaleTo(obj, { delay = 200, xScale = 1, yScale = 1, time = 1000, transition = easing.outElastic })
+end
+
+-- Function to animate an object with shaking effect
+function M.animateShake(obj)
+  local startX, startY = obj.x, obj.y
+
+  -- Define the shake range and duration
+  local shakeRange = 10
+  local shakeDuration = 500
+
+  -- Define the number of iterations and easing
+  local numIterations = 5
+  local easingType = easing.outQuad
+
+  -- Define the shake transition options
+  local shakeTransitionOptions = {
+    iterations = numIterations,
+    yoyo = true,
+    time = shakeDuration,
+    x = startX,
+    y = startY,
+    transition = easingType
+  }
+
+  -- Apply the shake transition to the object
+  transition.to(obj, shakeTransitionOptions)
+end
+
+function M.animateFlip(obj)
+  -- Define the flip transition options
+  local flipTransitionOptions = {
+    time = 500,
+    transition = easing.outSine,
+    onStart = function()
+      obj.isVisible = false
+    end,
+    onComplete = function()
+      obj.isVisible = true
+    end
+  }
+
+  -- Apply the flip transition to the object
+  transition.to(obj, {
+    rotationY = 90,
+    onComplete = function()
+      transition.to(obj, { rotationY = 0 })
+    end
+  })
+  transition.to(obj, flipTransitionOptions)
+end
+
 -- Call the function to animate the object
 return M

@@ -8,6 +8,8 @@ function M.createBox(x, y, text, color, size)
     local boxGroup = display.newGroup()
     local box = display.newRect(boxGroup, x, y, size, size)
     box.myName = text
+    box.iX = x
+    box.iY = y
     box:setFillColor(unpack(color))
 
     local boxAlphabet = display.newText({
