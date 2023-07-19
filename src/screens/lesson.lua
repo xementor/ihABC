@@ -146,8 +146,9 @@ local function gameLoop()
   end
 end
 
-local function createButton(sceneGroup, x, y, icon)
-  local buttonSize = 100
+local function createButton(sceneGroup, x, y, icon, size)
+  local buttonSize
+  if size then buttonSize = size else buttonSize = 100 end
   if not icon then icon = "crossIcon" end
   local button = display.newImage(sceneGroup, "images/" .. icon .. ".png")
   button.x = x
@@ -254,6 +255,7 @@ local function onCollision(event)
       speakButton.alpha = 0
       audio.play(audio.loadSound("sounds/correct.mp3"))
 
+
       -- change char index
       const.i = const.i + 1
 
@@ -284,24 +286,22 @@ local function onCollision(event)
         --animate first letter
         animation.scaleObject(firstLetter)
 
-
-
         --
         timer.performWithDelay(2000, function()
-          display.remove(wordGroup)
-          display.remove(wordImage)
-          ballText.text = const.lesson.getTargetText(const.i)
-          isWordanimating = false
-          speakButton.alpha = 1
+          -- display.remove(wordGroup)
+          -- display.remove(wordImage)
+          -- ballText.text = const.lesson.getTargetText(const.i)
+          -- isWordanimating = false
+          -- speakButton.alpha = 1
         end
         )
         if const.i < 4 then
-          timer.performWithDelay(2000, function()
-            animateText(ballText)({ phase = "ended" })
-          end)
-          timer.performWithDelay(4000, function()
-            ball.startingPhaseBall(ball1, ballStartY)
-          end)
+          -- timer.performWithDelay(2000, function()
+          --   animateText(ballText)({ phase = "ended" })
+          -- end)
+          -- timer.performWithDelay(4000, function()
+          --   ball.startingPhaseBall(ball1, ballStartY)
+          -- end)
         end
       end)
     elseif (obj1.myName == "platform" and obj2.myName == "ball") then
@@ -319,6 +319,9 @@ local function onClickspeakButton()
   if not isWordanimating then
     animateText(ballText)({ phase = "ended" })
   end
+end
+
+local function onClickNextButton()
 end
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -375,8 +378,8 @@ function scene:create(event)
 
 
   -- navigations icon
-  backButton = display.newImage(sceneGroup, "images/crossIcon.png")
-  local buttonSize = 100
+  backButton = display.newImage(sceneGroup, "images/x.png")
+  local buttonSize = 150
   local horizontalGap = 50
   local verticalGap = 10
   backButton.x = (buttonSize * .5)
@@ -400,8 +403,13 @@ function scene:create(event)
   -- Navigation
   local x = display.contentWidth - buttonSize
   local y = display.contentHeight + const.platformWidth / 2
-  speakButton = createButton(sceneGroup, x, y, "volume")
+  speakButton = createButton(sceneGroup, 0 + buttonSize, y, "speakG", 150)
   speakButton:addEventListener("tap", onClickspeakButton)
+
+  local next = display.newImage(sceneGroup, "images/next.png", x, y)
+  next.width = 150
+  next.height = 150
+  next:addEventListener("tap", onClickNextButton)
 
   -- Collision and EventListener
   ball1:addEventListener("touch", ball.createOnTouch(ball1))

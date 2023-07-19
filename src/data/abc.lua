@@ -3,14 +3,14 @@ local l = require "src.data.lessons"
 
 M.lessons = {
   l.generatorLesson({ "A", "B", "C" }, { "", "Apple", "Ball", "Cat" }, "ABC"),
-  l.generatorLesson({ "D", "E", "F" }, { "", "Dog", "Egg", "Frog" }, "DEF"),
-  l.generatorLesson({ "G", "H", "I" }, { "", "Google", "Hen", "Ice" }, "GHI"),
-  l.generatorLesson({ "J", "K", "L" }, { "", "Jam", "Kite", "Lemon" }, "JKL"),
-  l.generatorLesson({ "M", "N", "O" }, { "", "Moon", "Net", "Orange" }, "MNO"),
-  l.generatorLesson({ "P", "Q", "R" }, { "", "Pet", "Queen", "Rat" }, "PQR"),
-  l.generatorLesson({ "R", "S", "T" }, { "", "Rat", "Sun", "Tree" }, "RST"),
-  l.generatorLesson({ "U", "V", "W" }, { "", "Umbrella", "Vite", "Wood" }, "UVW"),
-  l.generatorLesson({ "X", "Y", "Z" }, { "", "Xo", "Yellow", "Zonaid" }, "XYZ")
+  l.generatorLesson({ "D", "E", "F" }, { "", "Dog", "Elephant", "Fox" }, "DEF"),
+  l.generatorLesson({ "G", "H", "I" }, { "", "Grape", "Horse", "Ice_cream" }, "GHI"),
+  l.generatorLesson({ "J", "K", "L" }, { "", "Juice", "Kangaroo", "Lion" }, "JKL"),
+  l.generatorLesson({ "M", "N", "O" }, { "", "Monkey", "Nest", "Orange" }, "MNO"),
+  l.generatorLesson({ "P", "Q", "R" }, { "", "Penguin", "Queen", "Rabbit" }, "PQR"),
+  l.generatorLesson({ "R", "S", "T" }, { "", "Rat", "Snake", "Turtle" }, "RST"),
+  l.generatorLesson({ "U", "V", "W" }, { "", "Umbrella", "Violin", "Whale" }, "UVW"),
+  l.generatorLesson({ "X", "Y", "Z" }, { "", "Xylophone", "Yogurt", "Zebra" }, "XYZ")
 }
 
 return M
