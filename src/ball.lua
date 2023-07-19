@@ -79,10 +79,8 @@ function M.startingPhaseBall(ball, y)
   transition.to(ball, {
     alpha = 1,
     time = 500,
-    onComplete = function()
-      ball:setLinearVelocity(0, 0)
-    end
   })
+  -- ball:setLinearVelocity(0, 0)
 end
 
 return M

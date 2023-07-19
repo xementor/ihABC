@@ -77,5 +77,16 @@ function M.animateColor(obj, currentColor, targetColor)
   updateColor()
 end
 
+function M.scaleObject(ob, func)
+  transition.to(ob, {
+    time = 500,
+    xScale = 1.5,
+    yScale = 1.5,
+    onComplete = function()
+      transition.to(ob, { time = 500, xScale = 1, yScale = 1, onComplete = func })
+    end
+  })
+end
+
 -- Call the function to animate the object
 return M

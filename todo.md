@@ -27,6 +27,8 @@
 - [x] fix ballText animation, wait to chnage the text
 - [x] lesson2 auto speaking problem
 - [x] lessonPath jump current to next lesson and scroll problem happens
+
 - [] add photos of Apple
+- [] AaBb lesson
 
 if there would be a visual editor like godot it will be very helpfull poitioning stuff in screen

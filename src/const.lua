@@ -19,8 +19,11 @@ M.ballYPosition      = display.contentHeight - 150 --display.contentHeight - M.e
 M.ballXPosition      = display.contentCenterX
 M.platformWidth      = 100
 
+M.variant2Color      = { 255 / 255, 98 / 255, 10 / 255 }
+M.variant3Color      = { 37 / 255, 37 / 255, 37 / 255 }
+M.variant1Color      = { 117 / 255, 160 / 255, 200 / 255 }
 
-M.i = 1
+M.i                  = 1
 
 
 -- pathName

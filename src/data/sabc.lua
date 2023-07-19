@@ -2,7 +2,7 @@ local M = {}
 local l = require "src.data.lessons"
 
 M.lessons = {
-  l.generatorLesson({ "a", "b", "c" }, { "", "apple", "banana", "cat" }, "abc"),
+  l.generatorLesson({ "a", "b", "c" }, { "", "apple", "ball", "cat" }, "abc"),
   l.generatorLesson({ "d", "e", "f" }, { "", "dog", "elephant", "fox" }, "def"),
   l.generatorLesson({ "g", "h", "i" }, { "", "grape", "horse", "ice cream" }, "ghi"),
   l.generatorLesson({ "j", "k", "l" }, { "", "juice", "kangaroo", "lion" }, "jkl"),

@@ -11,6 +11,7 @@ math.randomseed(os.time())
 
 -- Go to the menu screen
 composer.gotoScene("src.screens.menu")
+-- composer.gotoScene("src.screens.test")
 local lesson = {
   title = "vongcong",
   index = 3,

@@ -12,9 +12,9 @@ local animation       = require "src.animation"
 local startY          = display.contentHeight - 100
 local containerHeight = 250
 local lessonGap       = containerHeight + 50
-local variant2Color   = { 255 / 255, 98 / 255, 10 / 255 }
-local variant3Color   = { 37 / 255, 37 / 255, 37 / 255 }
-local variant1Color   = { 117 / 255, 160 / 255, 200 / 255 }
+local variant2Color   = const.variant2Color
+local variant3Color   = const.variant3Color
+local variant1Color   = const.variant1Color
 
 local levelData
 local numLesson

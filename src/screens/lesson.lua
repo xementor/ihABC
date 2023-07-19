@@ -25,6 +25,7 @@ local word
 local speakButton
 local group
 local ballStartY = const.ballYPosition
+local imageSize = 300
 
 -- Navigation
 local function gotoLessonPath(event)
@@ -190,6 +191,42 @@ local function showCongratulations()
   end)
 end
 
+local function createColoredText(grp, text, x, y, color, fontSize)
+  local coloredText = display.newText({
+    parent   = grp,
+    text     = text,
+    x        = x,
+    y        = y,
+    font     = native.systemFont,
+    fontSize = fontSize,
+    -- width    = 20,
+    -- height   = 100,
+  })
+  coloredText:setFillColor(unpack(color))
+  return coloredText
+end
+
+local function createColoredWordText(parentGroup, fullText)
+  local firstLetterColor  = const.variant2Color -- Red color
+  local otherLettersColor = { 1 }
+  local fontSize          = const.fontSize
+  local imageSize         = 300
+
+  local xPos              = display.contentCenterX
+  local yPos              = display.contentCenterY + (imageSize / 2)
+
+  local firstLetterText   = string.sub(fullText, 1, 1)
+  local otherLettersText  = string.sub(fullText, 2)
+
+  local fullTextGroup     = display.newGroup()
+  local otherLetters      = createColoredText(fullTextGroup, otherLettersText, xPos, yPos, otherLettersColor, fontSize)
+  local firstxPos         = xPos - (otherLetters.width / 2)
+  local firstLetter       = createColoredText(fullTextGroup, firstLetterText, firstxPos, yPos, firstLetterColor, fontSize)
+  otherLetters.x          = otherLetters.x + (firstLetter.width / 2)
+  parentGroup:insert(fullTextGroup)
+  return fullTextGroup, firstLetter
+end
+
 -- Call the function to trigger the congratulatory animation
 
 
@@ -231,17 +268,26 @@ local function onCollision(event)
 
       -- Additional screen for A for Apple
       timer.performWithDelay(2000, function()
-        word = display.newText({
-          parent = group,
-          text = const.lesson.getTargetWord(const.i),
-          x = display.contentCenterX,
-          y = display.contentCenterX,
-          font = native.systemFont,
-          fontSize = const.fontSize,
-          align = "center"
-        })
+        -- Image of words
+        local wordContent = const.lesson.getTargetWord(const.i)
+        local wordImagePath = "images/words/" .. string.lower(wordContent) .. ".png"
+        local wordImage = display.newImageRect(group, wordImagePath, imageSize, imageSize)
+        if wordImage then
+          wordImage.x = display.contentCenterX
+          wordImage.y = display.contentCenterY - (imageSize / 2)
+        end
+
+        local wordGroup, firstLetter = createColoredWordText(group, wordContent)
+
+        --animate first letter
+        animation.scaleObject(firstLetter)
+
+
+
+        --
         timer.performWithDelay(2000, function()
-          display.remove(word)
+          display.remove(wordGroup)
+          display.remove(wordImage)
           ballText.text = const.lesson.getTargetText(const.i)
         end
         )
