@@ -51,7 +51,7 @@ function M.buttonAnimation(button, func)
   })
 end
 
-function M.animateColor(obj, currentColor, targetColor)
+function M.animateColor(obj2, currentColor, targetColor)
   local transitionTime = 500                  -- Transition duration in milliseconds
   local steps = 10                            -- Number of steps in the animation
   local stepDuration = transitionTime / steps -- Duration of each step in milliseconds
@@ -68,7 +68,7 @@ function M.animateColor(obj, currentColor, targetColor)
       currentColor[i] = currentColor[i] + colorStep[i]
     end
 
-    obj:setFillColor(unpack(currentColor))
+    obj2:setFillColor(unpack(currentColor))
 
     if step < steps then
       timer.performWithDelay(stepDuration, updateColor)
@@ -105,14 +105,14 @@ function M.moveBoxes(box1, box2, box3)
   transition.to(box3, { delay = 2000, time = 500, alpha = 1, xScale = 1, yScale = 1, transition = easing.outQuad })
 end
 
-function M.animateScale(obj)
-  transition.scaleTo(obj, { xScale = 0.5, yScale = 0.5, time = 200, transition = easing.outQuad })
-  transition.scaleTo(obj, { delay = 200, xScale = 1, yScale = 1, time = 1000, transition = easing.outElastic })
+function M.animateScale(obj3)
+  transition.scaleTo(obj3, { xScale = 0.5, yScale = 0.5, time = 200, transition = easing.outQuad })
+  transition.scaleTo(obj3, { delay = 200, xScale = 1, yScale = 1, time = 1000, transition = easing.outElastic })
 end
 
 -- Function to animate an object with shaking effect
-function M.animateShake(obj)
-  local startX, startY = obj.x, obj.y
+function M.animateShake(obj0)
+  local startX, startY = obj0.x, obj0.y
 
   -- Define the shake range and duration
   local shakeRange = 10
@@ -133,30 +133,30 @@ function M.animateShake(obj)
   }
 
   -- Apply the shake transition to the object
-  transition.to(obj, shakeTransitionOptions)
+  transition.to(obj0, shakeTransitionOptions)
 end
 
-function M.animateFlip(obj)
+function M.animateFlip(object3)
   -- Define the flip transition options
   local flipTransitionOptions = {
     time = 500,
     transition = easing.outSine,
     onStart = function()
-      obj.isVisible = false
+      object3.isVisible = false
     end,
     onComplete = function()
-      obj.isVisible = true
+      object3.isVisible = true
     end
   }
 
   -- Apply the flip transition to the object
-  transition.to(obj, {
+  transition.to(object3, {
     rotationY = 90,
     onComplete = function()
-      transition.to(obj, { rotationY = 0 })
+      transition.to(object3, { rotationY = 0 })
     end
   })
-  transition.to(obj, flipTransitionOptions)
+  transition.to(object3, flipTransitionOptions)
 end
 
 -- Call the function to animate the object

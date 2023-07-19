@@ -18,11 +18,11 @@ local variant1Color   = const.variant1Color
 
 local levelData
 local numLesson
-local currentLesson
 local path
 local lessonTrack
 local haveUpdate
 local backButton
+local scrollView
 
 
 
@@ -152,7 +152,6 @@ local function createLessonTrack(pathString)
       lesson = makeLessons(containerY, i, 2)
     elseif i == levelData.currentLevel then
       lesson = makeLessons(containerY, i)
-      currentLesson = lesson
     else
       lesson = makeLessons(containerY, i, 3)
     end
@@ -193,6 +192,11 @@ local function createLessonTrack(pathString)
 end
 
 
+local function gotoScrollViewToTop()
+  local index = levelData.currentLevel
+  local endY = (numLesson - index - 2) * lessonGap
+  scrollView.y = endY
+end
 
 
 -- -----------------------------------------------------------------------------------
@@ -220,7 +224,7 @@ function scene:create(event)
 
 
 
-  local scrollView = display.newGroup()
+  scrollView = display.newGroup()
   scrollView:insert(lessonTrack)
   sceneGroup:insert(scrollView)
 
@@ -249,9 +253,6 @@ function scene:create(event)
 
   local function scrollListener(event)
     local phase = event.phase
-
-    local utils = require "src.utils"
-
     local startY = 0 - ((index - 1) * lessonGap)
 
     local endY = (numLesson - index - 2) * lessonGap
@@ -303,15 +304,26 @@ function scene:show(event)
     -- Code here runs when the scene is still off screen (but is about to come on screen)
     haveUpdate = event.params.extraData.haveUpdate
     levelData = state.getData(path)
+
+    if ((numLesson - levelData.currentLevel) < 3 and not haveUpdate) then
+      gotoScrollViewToTop()
+    end
   elseif (phase == "did") then
     if (levelData.currentLevel < 2) then return true end
     if haveUpdate then
       if haveUpdate == true then
-        local prevLesson = lessonTrack[levelData.currentLevel - 1]
+        local prevLesson
+        if (levelData.currentLevel > numLesson) then
+          prevLesson = lessonTrack[levelData.currentLevel - 1]
+          prevLesson[1]:setFillColor(unpack(variant2Color))
+          return true
+        end
         local curLesson = lessonTrack[levelData.currentLevel]
+        curLesson[1]:setFillColor(unpack(variant1Color))
+        prevLesson[1]:setFillColor(unpack(variant2Color))
 
-        animation.animateColor(curLesson[1], variant3Color, variant1Color)
-        animation.animateColor(prevLesson[1], variant1Color, variant2Color)
+        -- animation.animateColor(curLesson[1], variant3Color, variant1Color)
+        -- animation.animateColor(prevLesson[1], variant1Color, variant2Color)
       end
     end
   end

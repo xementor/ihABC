@@ -22,6 +22,7 @@ local function lessonTapped(event)
   }
 
   local function rest()
+    composer.removeScene("src.screens.menu")
     composer.gotoScene("src.screens.lessonPath", options)
   end
 
