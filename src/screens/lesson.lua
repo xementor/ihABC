@@ -229,6 +229,7 @@ end
 
 -- Call the function to trigger the congratulatory animation
 
+local isWordanimating = false
 
 local function onCollision(event)
   local obj1 = event.object1
@@ -249,6 +250,8 @@ local function onCollision(event)
           obj2.myName == "ball" and ball1.platformTouched
         ) and ballText.isTouchable then
       -- correct sound
+      isWordanimating = true
+      speakButton.alpha = 0
       audio.play(audio.loadSound("sounds/correct.mp3"))
 
       -- change char index
@@ -259,7 +262,6 @@ local function onCollision(event)
       animation.animateObject(obj1)
       showCongratulations()
 
-      local time = 3000
 
       -- Ball
       ball1.platformTouched = false
@@ -289,6 +291,8 @@ local function onCollision(event)
           display.remove(wordGroup)
           display.remove(wordImage)
           ballText.text = const.lesson.getTargetText(const.i)
+          isWordanimating = false
+          speakButton.alpha = 1
         end
         )
         if const.i < 4 then
@@ -312,7 +316,9 @@ local function onCollision(event)
 end
 
 local function onClickspeakButton()
-  animateText(ballText)({ phase = "ended" })
+  if not isWordanimating then
+    animateText(ballText)({ phase = "ended" })
+  end
 end
 -- -----------------------------------------------------------------------------------
 -- Scene event functions

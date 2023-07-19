@@ -120,7 +120,6 @@ local function generateGrid(content)
     end
   end
 
-  for ch, c in pairs(alphaCount) do print(ch, c) end
 
   return group
 end
@@ -146,13 +145,7 @@ local function makeCommand(event)
 end
 
 -- Navigation
-local function gotoLessonPath(event)
-  local haveUpdate
-  if lessonNo < levelData.currentLevel then
-    haveUpdate = false
-  else
-    haveUpdate = true
-  end
+local function gotoLessonPath(haveUpdate)
   local options = {
     effect = "slideLeft",
     time = 500,
@@ -160,17 +153,10 @@ local function gotoLessonPath(event)
       extraData = { path = path, haveUpdate = haveUpdate }
     }
   }
-  local function extra()
-    isRunning = false
-    -- display.remove(ball1)
-    composer.removeScene("src.screens.lesson2")
-    composer.gotoScene("src.screens.lessonPath", options)
-  end
-  if not event then
-    extra()
-    return
-  end
-  animation.buttonAnimation(event.target, extra)
+  isRunning = false
+  -- display.remove(ball1)
+  composer.removeScene("src.screens.lesson2")
+  composer.gotoScene("src.screens.lessonPath", options)
 end
 
 
@@ -187,7 +173,7 @@ local function gameLoop()
     state.updateLevel(path, lessonNo)
     if not isRunning then
       isRunning = true
-      gotoLessonPath()
+      gotoLessonPath(true)
     end
   end
 end
@@ -200,6 +186,12 @@ local function createButton(sceneGroup, x, y, icon)
   button.width = buttonSize
   button.height = buttonSize
   return button
+end
+
+local function onBackButtonPressed(event)
+  animation.buttonAnimation(event.target, function()
+    gotoLessonPath(false)
+  end)
 end
 
 -- -----------------------------------------------------------------------------------
@@ -229,7 +221,7 @@ function scene:create(event)
   x = buttonSize * .5
   y = display.screenOriginY + x
   backButton = createButton(sceneGroup, x, y)
-  backButton:addEventListener("tap", gotoLessonPath)
+  backButton:addEventListener("tap", onBackButtonPressed)
 
 
   sceneGroup:insert(grid)

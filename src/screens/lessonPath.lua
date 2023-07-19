@@ -260,7 +260,6 @@ function scene:create(event)
     if phase == "began" then
       display.currentStage:setFocus(event.target)
       scrollView.isFocus = true
-      print("scrollView y", scrollView.y, startY)
 
       -- Store initial position
       scrollView.startY = event.y
@@ -335,7 +334,6 @@ end
 function scene:destroy(event)
   local sceneGroup = self.view
   -- Code here runs prior to the removal of scene's view
-  print("destroy")
 end
 
 -- -----------------------------------------------------------------------------------
