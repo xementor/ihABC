@@ -28,7 +28,8 @@
 - [x] lesson2 auto speaking problem
 - [x] lessonPath jump current to next lesson and scroll problem happens
 
-- [] add photos of Apple
+- [x] add photos of Apple
+- [x] navigation and lessonPath problem
 - [] AaBb lesson
 
 if there would be a visual editor like godot it will be very helpfull poitioning stuff in screen

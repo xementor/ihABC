@@ -22,6 +22,7 @@ local currentLesson
 local path
 local lessonTrack
 local haveUpdate
+local backButton
 
 
 
@@ -29,6 +30,16 @@ local haveUpdate
 local isScrolling = false -- Variable to track scrolling state
 
 local function lessonTapped(event)
+  local tapX, tapY = event.x, event.y
+
+  -- Check if the tap event occurred within the bounds of backButton
+  local backButtonBounds = backButton.contentBounds
+
+  if (tapX >= backButtonBounds.xMin and tapX <= backButtonBounds.xMax) and
+      (tapY >= backButtonBounds.yMin and tapY <= backButtonBounds.yMax) then
+    return true
+  end
+
   if isScrolling then return true end
 
   local lesson = event.target.lesson
@@ -219,7 +230,7 @@ function scene:create(event)
   top:setFillColor(0)
 
   -- navigations icon
-  local backButton = display.newImage(sceneGroup, "images/backIcon.png")
+  backButton = display.newImage(sceneGroup, "images/backIcon.png")
   local buttonSize = 120
   local horizontalGap = 50
   local verticalGap = 5
